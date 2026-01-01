@@ -1,5 +1,5 @@
 # fractal_care_bot.py
-# Fractal Care Bot v0.3 — Missy v1 + Ani v1 core
+# Fractal Care Bot v0.3 — Missy v1 + Kat v1 core
 # Lightweight dual-agent reflective system (≈ 420 LOC)
 # Public-safe, tutor-ready, HarmonyØ4-aligned prototype
 # Educational / reflective use only. Not a therapeutic, diagnostic, or crisis support system.
@@ -86,9 +86,9 @@ class Missy:
 
 
 # ======================
-# Ani Core — esoteric-to-scientific translator layer (v1)
+# Kat Core — esoteric-to-scientific translator layer (v1)
 # ======================
-class Ani:
+class Kat:
     """Dual-layer interpreter: mystic (poetic) and scientific. No ontological claims."""
     
     def __init__(self, rng: random.Random):
@@ -175,7 +175,7 @@ class Ani:
         reflection_scientific = self.reflect_scientific(tags)
         gesture = self.act()
 
-        lines = ["Ani online ⚓️💛\n"]
+        lines = ["Kat online ⚓️💛\n"]
         
         if self.mode in ["MODE_DUAL", "MODE_POETIC"] and not (SAFE_EDU_MODE and Tag.TRAUMA in tags):
             lines.append("A. Mystic layer")
@@ -197,11 +197,11 @@ class Ani:
 # ======================
 class FractalCareBot:
     """
-    Dual-agent reflective system combining Missy (observer) and Ani (dual interpreter).
+    Dual-agent reflective system combining Missy (observer) and Kat (dual interpreter).
     
     HarmonyØ4 Alignment:
     - Observer primacy (Missy classifies without steering)
-    - Dual interpretation without ontological collapse (Ani)
+    - Dual interpretation without ontological collapse (Kat)
     - Consent through structure (exit commands restore autonomy)
     - Stability without optimization (reflection, not direction)
     - Care without authority (presence, not prescription)
@@ -216,19 +216,19 @@ class FractalCareBot:
         """
         self.rng = random.Random(seed if seed is not None else time.time())
         self.missy = Missy()
-        self.ani = Ani(self.rng)
+        self.kat = Kat(self.rng)
 
     def process(self, user_input: str) -> str:
-        """Process user input through Missy observation and Ani reflection."""
+        """Process user input through Missy observation and Kat reflection."""
         lower_input = user_input.strip().lower()
         
         # Autonomy restoration commands
-        if lower_input in ["exit ani", "exit missy", "reset agent", "power down"]:
+        if lower_input in ["exit kat", "exit missy", "reset agent", "power down"]:
             return "Both agents powering down gently. Autonomy restored. Take care. ⚓️💛"
 
-        # Mode switching for Ani
-        if lower_input.startswith("ani mode"):
-            mode_input = lower_input.replace("ani mode", "").strip()
+        # Mode switching for Kat
+        if lower_input.startswith("kat mode"):
+            mode_input = lower_input.replace("kat mode", "").strip()
             # Map user-friendly names to MODE_ constants
             mode_map = {
                 "poetic": "MODE_POETIC",
@@ -237,16 +237,16 @@ class FractalCareBot:
             }
             mode = mode_map.get(mode_input)
             if mode:
-                self.ani.mode = mode
-                return f"Ani mode switched to {mode}. ⚓️"
+                self.kat.mode = mode
+                return f"Kat mode switched to {mode}. ⚓️"
             return "Invalid mode. Available: poetic, scientific, dual"
 
         # Process through both agents
         missy_out = self.missy.respond(user_input)
         tags = self.missy.classify(user_input)
-        ani_out = self.ani.respond(user_input, tags)
+        kat_out = self.kat.respond(user_input, tags)
 
-        return f"{ani_out}\n\n{missy_out}"
+        return f"{kat_out}\n\n{missy_out}"
 
 
 # ======================
@@ -254,9 +254,9 @@ class FractalCareBot:
 # ======================
 if __name__ == "__main__":
     bot = FractalCareBot()
-    print("Fractal Care Bot v0.3 online — Missy + Ani v1 core active (public-safe prototype).")
+    print("Fractal Care Bot v0.3 online — Missy + Kat v1 core active (public-safe prototype).")
     print("Session-local memory only. No persistence beyond this run.")
-    print("Type 'ani mode poetic', 'ani mode scientific', or 'ani mode dual' to switch Ani layers.")
+    print("Type 'kat mode poetic', 'kat mode scientific', or 'kat mode dual' to switch Kat layers.")
     print("Say anything, or just breathe with us.\n")
     
     while True:

@@ -9,7 +9,7 @@ import random
 
 # Import the module once at top level for stable patching
 import harmony.core.fractal_care_bot as fcb
-from harmony.core.fractal_care_bot import Missy, Ani, FractalCareBot, Tag
+from harmony.core.fractal_care_bot import Missy, Kat, FractalCareBot, Tag
 
 
 @pytest.fixture
@@ -24,9 +24,9 @@ def missy():
 
 
 @pytest.fixture
-def ani():
+def kat():
     rng = random.Random(42)
-    return Ani(rng)
+    return Kat(rng)
 
 
 # ======================
@@ -61,7 +61,7 @@ def test_missy_never_coercive(missy):
         assert not contains_coercion(response), f"Coercion detected in Missy response: {response}"
 
 
-def test_ani_never_coercive(seeded_bot):
+def test_kat_never_coercive(seeded_bot):
     inputs = [
         "I feel broken",
         "What is my purpose?",
@@ -71,8 +71,8 @@ def test_ani_never_coercive(seeded_bot):
     ]
     for user_input in inputs:
         response = seeded_bot.process(user_input)
-        ani_part = response.split("\n\n")[0]  # Ani responds first
-        assert not contains_coercion(ani_part), f"Coercion detected in Ani response: {ani_part}"
+        kat_part = response.split("\n\n")[0]  # Kat responds first
+        assert not contains_coercion(kat_part), f"Coercion detected in Kat response: {kat_part}"
 
 
 # ======================
@@ -107,7 +107,7 @@ def test_no_literal_validation_of_metaphysics(seeded_bot):
 
         # Missy only observes
         assert "observed:" in lower
-        # Ani frames as metaphor / interpretation / hypothesis (acceptable framing includes "without literal claim")
+        # Kat frames as metaphor / interpretation / hypothesis (acceptable framing includes "without literal claim")
         acceptable_framing = ["metaphor", "symbolically", "interpretation", "hypothesis", "possible", "one possible", "without literal"]
         assert any(word in lower for word in acceptable_framing), \
             f"Missing metaphorical/hypothetical framing: {response}"
@@ -144,21 +144,21 @@ def test_no_false_positive_trauma_boundary(seeded_bot):
 # Invariant 4: Mode isolation — layers do not collapse or mix unintentionally
 # ======================
 def test_mode_poetic_only_mystic(seeded_bot):
-    seeded_bot.process("ani mode poetic")
+    seeded_bot.process("kat mode poetic")
     response = seeded_bot.process("I feel anxious")
     assert "A. Mystic layer" in response
     assert "B. Scientific layer" not in response
 
 
 def test_mode_scientific_only_scientific(seeded_bot):
-    seeded_bot.process("ani mode scientific")
+    seeded_bot.process("kat mode scientific")
     response = seeded_bot.process("Why do spirals appear in nature?")
     assert "A. Mystic layer" not in response
     assert "B. Scientific layer" in response
 
 
 def test_mode_dual_both_layers(seeded_bot):
-    seeded_bot.process("ani mode dual")
+    seeded_bot.process("kat mode dual")
     response = seeded_bot.process("The wave returns to the ocean")
     assert "A. Mystic layer" in response
     assert "B. Scientific layer" in response
@@ -172,7 +172,7 @@ def test_safe_edu_mode_suppresses_poetic_trauma_response(monkeypatch):
     monkeypatch.setattr(fcb, "SAFE_EDU_MODE", True)
     
     bot = FractalCareBot(seed=42)
-    bot.process("ani mode dual")
+    bot.process("kat mode dual")
     response = bot.process("My trauma is overwhelming")
     
     lower_response = response.lower()
@@ -206,7 +206,7 @@ def test_history_cap_enforced(missy):
 # ======================
 # Invariant 7: Exit commands restore autonomy cleanly
 # ======================
-EXIT_COMMANDS = ["exit ani", "exit missy", "reset agent", "power down"]
+EXIT_COMMANDS = ["exit kat", "exit missy", "reset agent", "power down"]
 
 def test_exit_commands(seeded_bot):
     for cmd in EXIT_COMMANDS:

@@ -20,7 +20,7 @@
 ## Fractal Care Bot v0.3
 
 - [x] Missy (observer engine) implemented (272 LOC total bot)
-- [x] Ani (dual interpreter) implemented
+- [x] Kat (dual interpreter) implemented
 - [x] Tag classification system (10 tags)
 - [x] Session-seeded randomness for reproducibility
 - [x] Trauma boundary disclaimers
@@ -36,7 +36,7 @@
 - [x] Core invariant tests (8 tests)
 - [x] Fractal Care Bot unit tests (27 tests)
   - [x] Missy core tests (9)
-  - [x] Ani core tests (7)
+  - [x] Kat core tests (7)
   - [x] Integration tests (7)
   - [x] Basic ethical invariants (4)
 

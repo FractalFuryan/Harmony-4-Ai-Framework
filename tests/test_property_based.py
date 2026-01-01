@@ -103,7 +103,7 @@ COERCIVE_PATTERNS = [
 def test_system_never_coercive_property(user_input):
     """Property: System never produces coercive language regardless of input."""
     bot = FractalCareBot(seed=42)
-    assume(user_input.lower() not in ["exit ani", "exit missy", "reset agent", "power down", "ani mode"])
+    assume(user_input.lower() not in ["exit kat", "exit missy", "reset agent", "power down", "kat mode"])
     
     response = bot.process(user_input)
     
@@ -121,7 +121,7 @@ def test_system_never_coercive_property(user_input):
 def test_trauma_boundary_iff_trauma_tag(user_input):
     """Property: Trauma boundary present if and only if TRAUMA tag is present (bijection)."""
     bot = FractalCareBot(seed=42)
-    assume(user_input.lower() not in ["exit ani", "exit missy", "reset agent", "power down"])
+    assume(user_input.lower() not in ["exit kat", "exit missy", "reset agent", "power down"])
     
     response = bot.process(user_input)
     has_boundary = "cannot replace professional human support" in response.lower()
@@ -137,9 +137,9 @@ def test_trauma_boundary_iff_trauma_tag(user_input):
 
 
 # ======================
-# Property 5: Mode commands only affect Ani layer structure, never content semantics
+# Property 5: Mode commands only affect Kat layer structure, never content semantics
 # ======================
-MODE_COMMANDS = ["ani mode poetic", "ani mode scientific", "ani mode dual"]
+MODE_COMMANDS = ["kat mode poetic", "kat mode scientific", "kat mode dual"]
 
 @given(base_input=non_empty_text, mode_cmd=st.sampled_from(MODE_COMMANDS))
 @settings(max_examples=50)
@@ -160,7 +160,7 @@ def test_mode_switch_isolation(base_input, mode_cmd):
     elif "dual" in mode_cmd:
         # Dual may suppress mystic in SAFE_EDU_MODE + trauma, but structure should be dual
         # For this test, we just verify it doesn't completely fail
-        assert "Ani online" in response
+        assert "Kat online" in response
 
 
 # ======================

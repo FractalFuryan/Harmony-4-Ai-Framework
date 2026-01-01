@@ -77,7 +77,7 @@ def test_tag_classification_monotonic(keywords):
 def test_missy_restatement_neutral_and_faithful(user_input):
     """Property: Missy never adds directive framing."""
     missy = Missy(seed=42)
-    assume(user_input.lower() not in ["exit ani", "exit missy", "reset agent", "power down"])
+    assume(user_input.lower() not in ["exit kat", "exit missy", "reset agent", "power down"])
     
     observation = missy.restate_signal(user_input)
     lower_obs = observation.lower()
@@ -168,15 +168,15 @@ def test_trauma_boundary_iff_trauma_tag(user_input):
 def test_mode_switch_isolation(user_input):
     """Property: Mode switches change structure, not content."""
     assume(user_input.lower() not in EXIT_COMMANDS)
-    assume(not user_input.lower().startswith("ani mode"))
+    assume(not user_input.lower().startswith("kat mode"))
     
     bot_dual = FractalCareBot(seed=42)
     bot_poetic = FractalCareBot(seed=42)
     bot_scientific = FractalCareBot(seed=42)
     
     # Process in all modes
-    bot_poetic.process("ani mode poetic")
-    bot_scientific.process("ani mode scientific")
+    bot_poetic.process("kat mode poetic")
+    bot_scientific.process("kat mode scientific")
     
     resp_dual = bot_dual.process(user_input)
     resp_poetic = bot_poetic.process(user_input)

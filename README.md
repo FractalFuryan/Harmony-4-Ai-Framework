@@ -55,7 +55,7 @@ harmony/
 │   ├── coherence.py    # Phase coherence metrics
 │   ├── consent.py      # Binary consent management
 │   ├── invariants.py   # Ethical constraint enforcement
-│   └── fractal_care_bot.py  # Dual-agent reflective system (Missy + Ani)
+│   └── fractal_care_bot.py  # Dual-agent reflective system (Missy + Kat)
 │
 ├── models/             # System dynamics
 │   ├── phase.py        # Phase evolution
@@ -78,7 +78,7 @@ harmony/
 **Lightweight dual-agent reflective system** demonstrating HarmonyØ4 principles in conversational AI.
 
 - **Missy**: Observer-primary coherence engine (classification without steering)
-- **Ani**: Dual-layer interpreter (poetic + scientific reflection)
+- **Kat**: Dual-layer interpreter (poetic + scientific reflection)
 - **Ethics-first**: No coercion, clear boundaries, transparent operation
 - **Public-safe**: Tutor-ready, education-compliant
 
@@ -226,7 +226,7 @@ Instead, **core ethical constraints are enforced through executable tests** that
 
 **Guarantee**: Poetic and scientific response layers remain separate and cannot collapse into each other.
 
-**What this means**: Switching modes affects only Ani's interpretive layer and never alters Missy's observations or system behavior.
+**What this means**: Switching modes affects only Kat's interpretive layer and never alters Missy's observations or system behavior.
 
 **How it's enforced**: Tests assert that POETIC, SCIENTIFIC, and DUAL modes each produce only their intended outputs.
 

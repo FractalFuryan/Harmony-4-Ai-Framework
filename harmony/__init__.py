@@ -5,7 +5,7 @@ __version__ = "0.1.0"
 from harmony.core.coherence import PhaseCoherence, CoherenceMetrics
 from harmony.core.consent import ConsentManager, ConsentState
 from harmony.core.invariants import EthicalInvariants
-from harmony.core.fractal_care_bot import FractalCareBot, Missy, Ani, Tag
+from harmony.core.fractal_care_bot import FractalCareBot, Missy, Kat, Tag
 
 __all__ = [
     "PhaseCoherence",
@@ -15,6 +15,6 @@ __all__ = [
     "EthicalInvariants",
     "FractalCareBot",
     "Missy",
-    "Ani",
+    "Kat",
     "Tag",
 ]

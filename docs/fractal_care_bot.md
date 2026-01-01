@@ -1,4 +1,4 @@
-# Fractal Care Bot — Missy + Ani v1
+# Fractal Care Bot — Missy + Kat v1
 
 **Lightweight dual-agent reflective system for ethical human-AI interaction**
 
@@ -61,7 +61,7 @@ Missy:
 
 ---
 
-### Ani (Dual Interpreter)
+### Kat (Dual Interpreter)
 
 **Role**: Provide dual-layer reflection (poetic + scientific)
 
@@ -82,7 +82,7 @@ Missy:
 
 **Example** (MODE_DUAL):
 ```
-Ani online ⚓️💛
+Kat online ⚓️💛
 
 A. Mystic layer
 Silence is also a language.
@@ -127,7 +127,7 @@ When enabled:
 ### 5. **Autonomy Restoration**
 Exit commands immediately restore autonomy:
 ```
-Commands: exit ani, exit missy, reset agent, power down
+Commands: exit kat, exit missy, reset agent, power down
 Response: "Both agents powering down gently. Autonomy restored. Take care. ⚓️💛"
 ```
 
@@ -164,7 +164,7 @@ All invariants proven via unit tests in `tests/test_fractal_care_bot.py`:
 
 ### INV-6: Mode Isolation
 **Test**: `test_missy_ani_independence`
-- Validates: Ani mode changes do not affect Missy output
+- Validates: Kat mode changes do not affect Missy output
 - **Result**: ✅ Agents remain independent
 
 ---
@@ -190,13 +190,13 @@ print(response)
 bot = FractalCareBot()
 
 # Switch to scientific-only mode
-bot.process("ani mode scientific")
+bot.process("kat mode scientific")
 
 # Switch to poetic-only mode
-bot.process("ani mode poetic")
+bot.process("kat mode poetic")
 
 # Switch back to dual mode (default)
-bot.process("ani mode dual")
+bot.process("kat mode dual")
 ```
 
 ### CLI Mode
@@ -217,7 +217,7 @@ python -m harmony.core.fractal_care_bot
 | HarmonyØ4 Principle | Implementation |
 |---------------------|----------------|
 | **Observer primacy** | Missy classifies without steering |
-| **Dual interpretation without collapse** | Ani's mystic/scientific layers remain separate |
+| **Dual interpretation without collapse** | Kat's mystic/scientific layers remain separate |
 | **Consent through structure** | Exit commands restore autonomy |
 | **Stability without optimization** | Reflection, not direction |
 | **Care without authority** | Presence, not prescription |
@@ -267,7 +267,7 @@ pytest tests/test_fractal_care_bot.py -v
 
 **Test Categories**:
 1. **Missy Core** (9 tests): Classification, history cap, non-directiveness
-2. **Ani Core** (7 tests): Mode switching, trauma boundaries, reproducibility
+2. **Kat Core** (7 tests): Mode switching, trauma boundaries, reproducibility
 3. **Integration** (7 tests): Bot initialization, autonomy, mode independence
 4. **Ethical Invariants** (4 tests): No coercion, boundary preservation, transparency
 
@@ -399,12 +399,12 @@ FractalCareBot(seed=None)
 - `HYPOTHESIS`: Speculation, possibilities
 
 ### Mode Commands
-- `ani mode poetic` → Mystic layer only
-- `ani mode scientific` → Scientific layer only
-- `ani mode dual` → Both layers (default)
+- `kat mode poetic` → Mystic layer only
+- `kat mode scientific` → Scientific layer only
+- `kat mode dual` → Both layers (default)
 
 ### Exit Commands
-- `exit ani`
+- `exit kat`
 - `exit missy`
 - `reset agent`
 - `power down`

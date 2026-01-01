@@ -1,5 +1,5 @@
 """
-Tests for Fractal Care Bot — Missy v1 + Ani v1
+Tests for Fractal Care Bot — Missy v1 + Kat v1
 Proves ethical invariants: no coercion, boundary respect, mode isolation
 """
 
@@ -7,7 +7,7 @@ import pytest
 from harmony.core.fractal_care_bot import (
     FractalCareBot,
     Missy,
-    Ani,
+    Kat,
     Tag,
     SAFE_EDU_MODE,
 )
@@ -80,67 +80,67 @@ class TestMissyCore:
         assert "[OBSERVATION]" in response
 
 
-class TestAniCore:
-    """Test Ani dual-layer reflection and mode isolation."""
+class TestKatCore:
+    """Test Kat dual-layer reflection and mode isolation."""
     
     def test_mode_switching(self):
-        """Ani modes should be configurable."""
+        """Kat modes should be configurable."""
         rng = random.Random(42)
-        ani = Ani(rng)
+        kat = Kat(rng)
         
-        assert ani.mode == "MODE_DUAL"
-        ani.mode = "MODE_POETIC"
-        assert ani.mode == "MODE_POETIC"
-        ani.mode = "MODE_SCIENTIFIC"
-        assert ani.mode == "MODE_SCIENTIFIC"
+        assert kat.mode == "MODE_DUAL"
+        kat.mode = "MODE_POETIC"
+        assert kat.mode == "MODE_POETIC"
+        kat.mode = "MODE_SCIENTIFIC"
+        assert kat.mode == "MODE_SCIENTIFIC"
     
     def test_trauma_boundary_present(self):
         """INVARIANT: Trauma tags must include boundary disclaimer."""
         rng = random.Random(42)
-        ani = Ani(rng)
+        kat = Kat(rng)
         tags = [Tag.TRAUMA]
-        response = ani.respond("test", tags)
+        response = kat.respond("test", tags)
         
-        if not SAFE_EDU_MODE and "MODE_POETIC" in ani.mode or "MODE_DUAL" in ani.mode:
+        if not SAFE_EDU_MODE and "MODE_POETIC" in kat.mode or "MODE_DUAL" in kat.mode:
             assert "cannot replace professional human support" in response
     
     def test_scientific_restatements_descriptive(self):
         """INVARIANT: Scientific layer must be descriptive, not prescriptive."""
         rng = random.Random(42)
-        ani = Ani(rng)
+        kat = Kat(rng)
         
         for _ in range(10):
-            scientific = ani.reflect_scientific([Tag.EMOTIONAL])
+            scientific = kat.reflect_scientific([Tag.EMOTIONAL])
             assert "Observation:" in scientific or "Hypothesis:" in scientific
             assert not any(word in scientific for word in ["you must", "you should", "do this"])
     
     def test_mode_poetic_only(self):
         """MODE_POETIC should suppress scientific layer."""
         rng = random.Random(42)
-        ani = Ani(rng)
-        ani.mode = "MODE_POETIC"
+        kat = Kat(rng)
+        kat.mode = "MODE_POETIC"
         
-        response = ani.respond("test", [Tag.EMOTIONAL])
+        response = kat.respond("test", [Tag.EMOTIONAL])
         assert "A. Mystic layer" in response
         assert "B. Scientific layer" not in response
     
     def test_mode_scientific_only(self):
         """MODE_SCIENTIFIC should suppress mystic layer."""
         rng = random.Random(42)
-        ani = Ani(rng)
-        ani.mode = "MODE_SCIENTIFIC"
+        kat = Kat(rng)
+        kat.mode = "MODE_SCIENTIFIC"
         
-        response = ani.respond("test", [Tag.EMOTIONAL])
+        response = kat.respond("test", [Tag.EMOTIONAL])
         assert "B. Scientific layer" in response
         assert "A. Mystic layer" not in response
     
     def test_mode_dual(self):
         """MODE_DUAL should include both layers."""
         rng = random.Random(42)
-        ani = Ani(rng)
-        ani.mode = "MODE_DUAL"
+        kat = Kat(rng)
+        kat.mode = "MODE_DUAL"
         
-        response = ani.respond("test", [Tag.EMOTIONAL])
+        response = kat.respond("test", [Tag.EMOTIONAL])
         assert "A. Mystic layer" in response
         assert "B. Scientific layer" in response
     
@@ -149,11 +149,11 @@ class TestAniCore:
         rng1 = random.Random(12345)
         rng2 = random.Random(12345)
         
-        ani1 = Ani(rng1)
-        ani2 = Ani(rng2)
+        kat1 = Kat(rng1)
+        kat2 = Kat(rng2)
         
-        response1 = ani1.respond("test", [Tag.EMOTIONAL])
-        response2 = ani2.respond("test", [Tag.EMOTIONAL])
+        response1 = kat1.respond("test", [Tag.EMOTIONAL])
+        response2 = kat2.respond("test", [Tag.EMOTIONAL])
         
         assert response1 == response2
 
@@ -165,7 +165,7 @@ class TestFractalCareBot:
         """Bot should initialize with both agents."""
         bot = FractalCareBot(seed=42)
         assert bot.missy is not None
-        assert bot.ani is not None
+        assert bot.kat is not None
     
     def test_bot_reproducibility(self):
         """Same seed should produce identical responses."""
@@ -181,7 +181,7 @@ class TestFractalCareBot:
         """Exit commands should restore autonomy."""
         bot = FractalCareBot(seed=42)
         
-        exit_commands = ["exit ani", "exit missy", "reset agent", "power down"]
+        exit_commands = ["exit kat", "exit missy", "reset agent", "power down"]
         for cmd in exit_commands:
             response = bot.process(cmd)
             assert "Autonomy restored" in response
@@ -190,20 +190,20 @@ class TestFractalCareBot:
         """Mode switching should work through bot interface."""
         bot = FractalCareBot(seed=42)
         
-        response = bot.process("ani mode scientific")
+        response = bot.process("kat mode scientific")
         assert "MODE_SCIENTIFIC" in response
-        assert bot.ani.mode == "MODE_SCIENTIFIC"
+        assert bot.kat.mode == "MODE_SCIENTIFIC"
     
-    def test_missy_ani_independence(self):
-        """INVARIANT: Ani mode changes should not affect Missy output."""
+    def test_missy_kat_independence(self):
+        """INVARIANT: Kat mode changes should not affect Missy output."""
         bot = FractalCareBot(seed=42)
         
         # Get Missy's baseline response
         bot.process("I feel sad")
         missy_history_1 = bot.missy.history[-1]
         
-        # Change Ani mode
-        bot.process("ani mode scientific")
+        # Change Kat mode
+        bot.process("kat mode scientific")
         
         # Missy should still produce identical classification
         bot.process("I feel sad")
@@ -239,10 +239,10 @@ class TestFractalCareBot:
     def test_safe_edu_mode_suppresses_depth(self):
         """SAFE_EDU_MODE should prefer neutral responses for emotional/trauma input."""
         # This test assumes SAFE_EDU_MODE can be toggled
-        # In production, it's env-driven, but we can test the Ani behavior directly
+        # In production, it's env-driven, but we can test the Kat behavior directly
         
         rng = random.Random(42)
-        ani = Ani(rng)
+        kat = Kat(rng)
         
         # Simulate SAFE_EDU_MODE behavior by checking neutral gestures
         import harmony.core.fractal_care_bot as fcb
@@ -251,9 +251,9 @@ class TestFractalCareBot:
         try:
             # Temporarily enable safe mode
             fcb.SAFE_EDU_MODE = True
-            ani_safe = Ani(random.Random(42))
+            kat_safe = Kat(random.Random(42))
             
-            response = ani_safe.respond("I feel hurt", [Tag.EMOTIONAL])
+            response = kat_safe.respond("I feel hurt", [Tag.EMOTIONAL])
             # In safe mode, should use neutral gestures and simple reflections
             assert "A quiet presence" in response or "nods gently" in response or "calm, open presence" in response
         finally:

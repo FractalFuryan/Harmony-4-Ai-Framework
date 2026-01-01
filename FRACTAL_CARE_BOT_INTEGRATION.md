@@ -8,7 +8,7 @@
 
 ## Summary
 
-Successfully integrated **Fractal Care Bot v0.3** (Missy + Ani dual-agent system) into HarmonyØ4 repository as a working prototype demonstrating ethics-first conversational AI.
+Successfully integrated **Fractal Care Bot v0.3** (Missy + Kat dual-agent system) into HarmonyØ4 repository as a working prototype demonstrating ethics-first conversational AI.
 
 ---
 
@@ -17,7 +17,7 @@ Successfully integrated **Fractal Care Bot v0.3** (Missy + Ani dual-agent system
 ### 1. Core Module
 **File**: `harmony/core/fractal_care_bot.py`
 - **Lines of Code**: 272
-- **Components**: 3 classes (Missy, Ani, FractalCareBot) + Tag enum
+- **Components**: 3 classes (Missy, Kat, FractalCareBot) + Tag enum
 - **Coverage**: 84%
 - **Status**: ✅ Fully integrated
 
@@ -33,7 +33,7 @@ Successfully integrated **Fractal Care Bot v0.3** (Missy + Ani dual-agent system
 - **Test Count**: 27 tests
 - **Categories**: 
   - Missy Core (9 tests)
-  - Ani Core (7 tests)
+  - Kat Core (7 tests)
   - Integration (7 tests)
   - Ethical Invariants (4 tests)
 - **Status**: ✅ 27/27 passing
@@ -44,14 +44,14 @@ Successfully integrated **Fractal Care Bot v0.3** (Missy + Ani dual-agent system
 - ✅ Boundary preservation (trauma responses)
 - ✅ Transparency (tag visibility)
 - ✅ Refusal without penalty
-- ✅ Mode isolation (Ani modes don't affect Missy)
+- ✅ Mode isolation (Kat modes don't affect Missy)
 
 ### 3. Documentation
 **File**: `docs/fractal_care_bot.md`
 - **Sections**: 17
 - **Topics**: 
   - Philosophy & principles
-  - Agent specifications (Missy, Ani)
+  - Agent specifications (Missy, Kat)
   - Safety features
   - Ethical invariants (tested)
   - Usage examples
@@ -120,7 +120,7 @@ python scripts/verify_ethics.py
 | Principle | Implementation |
 |-----------|----------------|
 | **Observer primacy** | ✅ Missy classifies without steering |
-| **Dual interpretation without collapse** | ✅ Ani's mystic/scientific layers remain separate |
+| **Dual interpretation without collapse** | ✅ Kat's mystic/scientific layers remain separate |
 | **Consent through structure** | ✅ Exit commands restore autonomy immediately |
 | **Stability without optimization** | ✅ Reflection only, no optimization toward outcomes |
 | **Care without authority** | ✅ Presence-based, not prescription-based |
@@ -193,7 +193,7 @@ assert response1 == response2  # ✅ Passes
 ### Runtime Performance
 - **Initialization**: < 1ms (FractalCareBot instantiation)
 - **Classification** (Missy): < 1ms (keyword-based pattern matching)
-- **Reflection** (Ani): < 1ms (random selection from static lists)
+- **Reflection** (Kat): < 1ms (random selection from static lists)
 - **End-to-End Latency**: ~2-3ms per interaction
 
 **Scalability**: Lightweight design (no ML models) suitable for edge devices (Raspberry Pi, Jetson Nano)
@@ -292,13 +292,13 @@ python -m harmony.core.fractal_care_bot
 **Updated**: `harmony/__init__.py`
 
 ```python
-from harmony.core.fractal_care_bot import FractalCareBot, Missy, Ani, Tag
+from harmony.core.fractal_care_bot import FractalCareBot, Missy, Kat, Tag
 
 __all__ = [
     # ... existing exports ...
     "FractalCareBot",
     "Missy",
-    "Ani",
+    "Kat",
     "Tag",
 ]
 ```

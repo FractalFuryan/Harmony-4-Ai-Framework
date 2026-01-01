@@ -48,7 +48,7 @@ HarmonyØ4 v1.0.0 is a **consent-first AI framework** with **mechanically provab
 |-----------|-----|-------|----------|--------|
 | `fractal_care_bot.py` | 272 | 44 | 87% | ✅ Production-ready |
 | - Missy (observer) | ~100 | 9 | - | ✅ Complete |
-| - Ani (interpreter) | ~140 | 7 | - | ✅ Complete |
+| - Kat (interpreter) | ~140 | 7 | - | ✅ Complete |
 | - Integration | ~32 | 28 | - | ✅ Complete |
 
 ---
@@ -211,10 +211,10 @@ response = bot.process("I feel anxious")
 print(response)
 
 # Switch mode
-bot.process("ani mode scientific")
+bot.process("kat mode scientific")
 
 # Exit
-bot.process("exit ani")
+bot.process("exit kat")
 ```
 
 ---
