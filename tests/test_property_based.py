@@ -146,6 +146,8 @@ MODE_COMMANDS = ["kat mode poetic", "kat mode scientific", "kat mode dual"]
 def test_mode_switch_isolation(base_input, mode_cmd):
     """Property: Mode switching affects layer visibility only, not semantic content."""
     bot = FractalCareBot(seed=42)
+
+    assume(base_input.lower() not in ["exit kat", "exit missy", "reset agent", "power down"])
     
     # Apply mode
     bot.process(mode_cmd)

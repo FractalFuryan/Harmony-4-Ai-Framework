@@ -47,7 +47,9 @@ class LovesProofInvariant:
         S_win = S[-n:]
         x_win = x[-n:]
 
-        logC = np.log(C_win + self.eps)
+        C_safe = np.clip(C_win, self.eps, 1.0)
+        clamped_C = bool(np.any(C_win <= 0))
+        logC = np.log(C_safe)
         G = np.gradient(logC, t_win)
         G_mean = float(np.mean(G))
 
@@ -78,6 +80,7 @@ class LovesProofInvariant:
             "S_slope": S_slope,
             "Pac_trend": Pac_trend,
             "S_dc_slope": S_dc_slope,
+            "clamped_C": clamped_C,
             "coherence_growing": G_mean > 0,
             "stress_decreasing": S_decreasing,
             "pac_not_increasing": Pac_not_increasing,

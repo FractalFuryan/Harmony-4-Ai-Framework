@@ -1,6 +1,6 @@
-# HarmonyØ4
+# HarmonyØ4 + Heart Field Dynamics
 
-**An open, ethical framework for modeling coherence, consent, and observer-safe systems.**
+**An open, ethical framework for modeling coherence, consent, and observer-safe systems — now with biophysical extensions for non-coercive growth.**
 
 [![CI](https://github.com/harmony04/harmony04/actions/workflows/ci.yml/badge.svg)](https://github.com/harmony04/harmony04/actions)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
@@ -9,41 +9,57 @@
 
 ---
 
-## Vision
+## What's New (v0.3.0)
 
-HarmonyØ4 rejects the dominant paradigm in AI/ML systems: **optimize toward a target state through force**. We prove that stability can emerge without coercion.
+This repository now includes **Love's Proof** — a mathematical invariant for non-coercive growth, implemented across multiple domains:
 
-This is not about making AI safer. This is about making AI **respectful**.
-
-## Ethical Foundation
-
-HarmonyØ4 operates under the [DAVNA Covenant](DAVNA_COVENANT.md) —  
-a **Declaration of Agency, Verifiability, Non-Coercion, and Autonomy**.
-
-All mechanical ethical constraints are executable and verified.  
-The covenant provides the human moral reference layer.
-
-The covenant is protected by a **Living Cipher Seal**: a public, secret-free, chained hash that makes every edit self-authenticating and tamper-evident.  
-Verify anytime with `python scripts/verify_davna.py`.
-
-### Core Principles
-
-1. **Stability emerges—it is never forced**
-2. **Consent is binary, explicit, and revocable**
-3. **No optimization that violates observer boundaries**
-4. **All changes must preserve ethical invariants**
+- **Universal AC/DC decomposition**: signal analysis operator for separating baseline from fluctuations
+- **Love's Proof invariant**: $G > 0 \wedge \dot{S} < 0 \wedge \dot{P}_{ac} \le 0$ — mathematically verified non-coercion
+- **Physiological extensions**: heart field dynamics with ethical constraints
+- **Domain adapters**: coupling, dialogue, and system-wide applications
 
 ---
 
-## What Makes HarmonyØ4 Different
+## Mathematical Foundation
 
-| Traditional ML | HarmonyØ4 |
-|----------------|-----------|
-| Minimize loss function | Measure coherence (no minimization) |
-| Force alignment to external goals | Respect internal stability |
-| Shared gradients across agents | Observer boundaries enforced |
-| Implicit state coupling | Explicit consent required |
-| Faster is better | Emergence takes time—that's the point |
+### Love's Proof (Universal Non-Coercive Growth Invariant)
+
+For any system with measurable:
+
+- **Coherence** $C(t)$ (order, stability)
+- **Stress** $S(t)$ (resistance, instability)
+- **Influence carrier** $x(t)$ (coupling, pressure)
+
+The invariant is:
+
+$$
+\begin{aligned}
+\langle G \rangle_W &> 0 \quad &\text{(coherence grows)} \\
+\langle \dot{S} \rangle_W &< 0 \quad &\text{(stress decreases)} \\
+\langle \dot{P}_{\text{AC}} \rangle_W &\le 0 \quad &\text{(AC power does not increase)}
+\end{aligned}
+$$
+
+where:
+
+- $G = \frac{d}{dt} \log(C + \epsilon)$ — coherence growth rate
+- $P_{\text{AC}}$ — AC power of the influence carrier
+- $W$ — analysis window
+
+**Interpretation**: order must emerge without force, pressure, or volatility exploitation.
+
+### AC/DC Decomposition Operator
+
+Any signal $x(t)$ decomposes as:
+
+$$
+x(t) = x_{\text{DC}}(t) + x_{\text{AC}}(t)
+$$
+
+- **DC**: low-pass filtered baseline (long-term load, traits)
+- **AC**: high-frequency fluctuations (reactivity, immediate state)
+
+Implemented via EMA filter: `x_dc = ema_lpf(x, alpha)`
 
 ---
 
@@ -51,208 +67,196 @@ Verify anytime with `python scripts/verify_davna.py`.
 
 ```
 harmony/
-├── core/               # Foundational primitives
-│   ├── coherence.py    # Phase coherence metrics
-│   ├── consent.py      # Binary consent management
-│   ├── invariants.py   # Ethical constraint enforcement
-│   └── fractal_care_bot.py  # Dual-agent reflective system (Missy + Kat)
-│
-├── ops/                # Signal operations (AC/DC primitives)
-│   └── acdc.py          # Baseline vs fluctuation decomposition
-│
-├── invariants/         # Generalized ethical invariants
-│   ├── non_coercion.py  # G > 0 while S decreases
-│   ├── consent_locking.py # Consent-as-locking invariant
-│   ├── growth_bounds.py # Bounded growth laws
-│   └── loves_proof.py   # Love's Proof kernel (G > 0, S down, Pac not up)
-│
-├── models/             # System dynamics
-│   ├── phase.py        # Phase evolution
-│   ├── role_dynamics.py# Role elasticity
-│   └── observer.py     # Observer boundaries
-│
-├── physiology/         # Domain adapters and physiology modules
-│   ├── heart/           # Heart-field scoring + Love's Proof adapter
-│   ├── respiration/     # Respiration placeholders
-│   └── shared/          # Domain-agnostic phase tools
-│
-├── coupling/           # Coupling/entrainment Love's Proof adapter
-│
-├── dialogue/           # Dialogue Love's Proof adapter
-│
-├── safeguards/         # Protection mechanisms
-│   ├── boundary.py     # Boundary integrity guards
-│   ├── witness.py      # Consent-gated observation
-│   └── drift_detection.py # Behavioral drift detection
-│
-└── api/
-    └── public.py       # Explicitly safe surface
-```
-
----
-
-## Love's Proof + AC/DC System
-
-HarmonyO4 now includes a universal non-coercive growth invariant and AC/DC signal
-operators. The kernel formalizes:
-
-$G > 0 \wedge dS/dt < 0 \wedge P_{ac} \le 0$
-
-Where $G = d/dt \log(C + \epsilon)$ and $P_{ac}$ is the AC power trend.
-
-Quick example:
-
-```python
-import numpy as np
-from harmony import LovesProofInvariant, acdc_split
-
-t = np.linspace(0, 60, 300)
-C = 0.2 + 0.6 * (1 - np.exp(-t / 20))
-S = 1.0 - 0.5 * (t / t[-1])
-x = 0.2 + 0.02 * np.sin(2 * np.pi * t / 5)
-
-invariant = LovesProofInvariant()
-result = invariant.check(t, C, S, x)
-print(result["invariant_holds"], result["violation_reason"])
-```
-
-See the full extension notes in [docs/math/extensions.md](docs/math/extensions.md).
-
----
-
-## Featured: Fractal Care Bot 🤖⚓️
-
-**Lightweight dual-agent reflective system** demonstrating HarmonyØ4 principles in conversational AI.
-
-- **Missy**: Observer-primary coherence engine (classification without steering)
-- **Kat**: Dual-layer interpreter (poetic + scientific reflection)
-- **Ethics-first**: No coercion, clear boundaries, transparent operation
-- **Public-safe**: Tutor-ready, education-compliant
-
-```python
-from harmony import FractalCareBot
-
-bot = FractalCareBot(seed=42)  # Reproducible mode
-response = bot.process("I feel anxious about the future")
-print(response)
-```
-
-📖 **[Full Documentation](docs/fractal_care_bot.md)** | 🧪 **[Demo](examples/fractal_care_bot_demo.py)**
-
----
-
-## Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/harmony04/harmony04.git
-cd harmony04
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install package
-pip install -e ".[dev]"
-```
-
----
-
-## Testing
-
-Run the full suite with coverage (coverage gate is 85%):
-
-```bash
-pytest --cov=harmony --cov-report=term-missing --cov-fail-under=85
-```
-
-Run the mathematical suite directly:
-
-```bash
-python tests/math/run_math_tests.py
+├── core/                    # Original HarmonyØ4
+├── ops/                     # Mathematical operators
+│   └── acdc.py              # AC/DC decomposition
+├── invariants/              # Ethical invariants
+│   ├── loves_proof.py       # Universal non-coercion
+│   ├── non_coercion.py      # Base non-coercion
+│   ├── consent_locking.py   # Consent-as-locking invariant
+│   └── growth_bounds.py     # Bounded growth laws
+├── physiology/              # Biophysical extensions
+│   ├── heart/               # Heart field dynamics
+│   │   ├── preprocessing.py
+│   │   ├── analytic.py
+│   │   ├── coherence.py
+│   │   ├── entrainment.py
+│   │   ├── stress.py
+│   │   ├── field_score.py
+│   │   └── loves_proof.py   # Physiology adapter
+│   └── shared/
+│       └── phase_tools.py
+├── coupling/                # Coupling dynamics
+│   └── loves_proof.py       # Entrainment adapter
+└── dialogue/                # Linguistic influence
+    └── loves_proof.py       # Dialogue adapter
 ```
 
 ---
 
 ## Quick Start
 
-### Example: Observer with Consent
+### Installation
 
-```python
-from harmony.api.public import create_observer
-
-# Create two observers
-observer_a, consent_a = create_observer("alice", state_dim=10)
-observer_b, consent_b = create_observer("bob", state_dim=10)
-
-# Alice grants observation consent to Bob
-consent_a.grant_consent("alice", "bob", "observe")
-
-# Bob can now witness Alice (lossy projection)
-if consent_a.check_consent("alice", "bob", "observe"):
-    projection = observer_a.witness_projection("bob", projection_dim=5)
-    print(f"Bob witnesses Alice: {projection}")
-
-# Alice revokes consent
-consent_a.revoke_consent("alice", "bob", "observe")
-
-# Bob can no longer observe
-projection = observer_a.witness_projection("bob", projection_dim=5)
-print(f"After revocation: {projection}")  # None
+```bash
+git clone https://github.com/FractalFuryan/Harmony-4-Ai-Framework.git
+cd Harmony-4-Ai-Framework
+pip install -e ".[dev]"
 ```
 
-### Example: Phase Coherence
+### Example: Heart Field Analysis
 
 ```python
-from harmony.core.coherence import PhaseCoherence
 import numpy as np
+from harmony.physiology.heart import HeartFieldScorer
+from harmony.invariants.loves_proof import LovesProofInvariant
 
-# Create phase coherence tracker
-pc = PhaseCoherence(n_components=5)
+# Simulated physiological data
+fs = 250.0
+t = np.arange(0, 300, 1 / fs)  # 5 minutes
+heart_coherence = 0.3 + 0.5 * (1 - np.exp(-t / 100))
+stress = 0.8 - 0.6 * (t / t[-1])
+heart_amplitude = 1.0 + 0.1 * np.sin(2 * np.pi * t / 10)
 
-# Perfect coherence
-aligned_phases = np.zeros(5)
-coherence = pc.compute(aligned_phases)
-print(f"Aligned coherence: {coherence:.2f}")  # 1.00
+# Check Love's Proof
+invariant = LovesProofInvariant()
+result = invariant.check(t, heart_coherence, stress, heart_amplitude)
 
-# Random phases (low coherence)
-random_phases = np.random.uniform(0, 2*np.pi, 5)
-coherence = pc.compute(random_phases)
-print(f"Random coherence: {coherence:.2f}")  # ~0.0
-
-# Detect drift
-pc.set_baseline(aligned_phases)
-drift = pc.drift_from_baseline(random_phases)
-print(f"Drift magnitude: {drift:.2f}")
+print(f"Love's Proof holds: {result['invariant_holds']}")
+print(f"Coherence growth: {result['G_mean']:.3f}")
+print(f"Stress trend: {result['S_slope']:.3f}")
 ```
 
-### Example: Ethical Invariants
+See a full walkthrough in [examples/heart_field_basic_usage.py](examples/heart_field_basic_usage.py).
+
+### Example: AC/DC Analysis
 
 ```python
-from harmony.core.invariants import EthicalInvariants
+import numpy as np
+from harmony.ops.acdc import acdc_split, ac_power
 
-inv = EthicalInvariants()
+signal = np.random.randn(1000) + 2.0
+dc_component, ac_component = acdc_split(signal, alpha=0.02)
 
-# Check consent monotonicity (INV-1)
-consent_ok = inv.check_consent_monotonicity(
-    consent_granted=False,
-    state_changed=True  # Violation!
-)
-print(f"Consent invariant holds: {consent_ok}")  # False
-
-# Check boundary preservation (INV-2)
-boundary_ok = inv.check_boundary_preservation(
-    boundary_before=0.9,
-    boundary_after=0.7,  # Degraded
-    consent_granted=False  # Without consent!
-)
-print(f"Boundary invariant holds: {boundary_ok}")  # False
-
-# Review violations
-print(inv.get_violations())
+print(f"DC mean: {np.mean(dc_component):.3f}")
+print(f"AC power: {ac_power(ac_component):.3f}")
+print(f"Signal = DC + AC: {np.allclose(signal, dc_component + ac_component)}")
 ```
 
 ---
+
+## Research Applications
+
+1. **Biofeedback & heart coherence training**
+2. **Interpersonal physiology with consent-aware entrainment**
+3. **Ethical AI & dialogue systems**
+4. **System dynamics & non-coercive control**
+
+---
+
+## Testing & Verification
+
+```bash
+# Mathematical validation suite
+python run_math_tests.py
+
+# Full test suite with coverage gate
+pytest --cov=harmony --cov-report=term-missing --cov-fail-under=85
+
+# Verify ethical constraints
+python scripts/verify_ethics.py
+```
+
+---
+
+## Mathematical Validation
+
+All components are mathematically verified:
+
+1. **AC/DC properties**: linearity, reconstruction, frequency separation
+2. **Love's Proof invariants**: scale invariance, time translation, continuity
+3. **Edge cases**: zero coherence, constant signals, discontinuities
+4. **System models**: harmonic oscillators, Lotka-Volterra, Kuramoto
+
+See [tests/math/](tests/math/) for the complete validation suite.
+
+---
+
+## API Highlights
+
+- `harmony.ops.acdc`: `acdc_split()`, `ema_lpf()`, `ac_power()`
+- `harmony.invariants.loves_proof`: `LovesProofInvariant`
+- `harmony.physiology.heart`: `HeartFieldScorer`, `PhysiologyLovesProof`
+- `harmony.coupling.loves_proof`: `CouplingLovesProof`
+- `harmony.dialogue.loves_proof`: `DialogueLovesProof`
+
+---
+
+## Citing This Work
+
+### Framework Citation
+
+```bibtex
+@software{harmony04,
+  title = {HarmonyØ4: An Ethical Framework for Coherence-Based Systems},
+  author = {HarmonyØ4 Contributors},
+  year = {2024},
+  url = {https://github.com/harmony04/harmony04},
+  note = {With Love's Proof extensions for non-coercive growth}
+}
+```
+
+### Mathematical Extensions
+
+```bibtex
+@software{harmony04_lovesproof,
+  title = {Love's Proof: A Mathematical Invariant for Non-Coercive Growth},
+  author = {FractalFuryan and HarmonyØ4 Contributors},
+  year = {2024},
+  url = {https://github.com/FractalFuryan/Harmony-4-Ai-Framework},
+  note = {AC/DC decomposition and universal non-coercion invariant}
+}
+```
+
+---
+
+## Research Status
+
+**Current version**: 0.3.0 (Research Beta)
+
+- **Mathematically verified**: core invariants proven
+- **Ethically constrained**: DAVNA principles maintained
+- **Domain extensible**: physiology, coupling, dialogue adapters
+- **Experimental validation**: single-subject studies in progress
+- **Performance**: research-ready, not production-optimized
+
+---
+
+## Contributing
+
+We welcome contributions that align with:
+
+1. **Mathematical rigor**: extensions must be mathematically sound
+2. **Ethical alignment**: must respect DAVNA Covenant principles
+3. **Test coverage**: comprehensive tests for new functionality
+4. **Documentation**: clear mathematical and ethical documentation
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+---
+
+## Links
+
+- **Documentation**: [docs/math/extensions.md](docs/math/extensions.md)
+- **Tests**: [tests/math/](tests/math/)
+- **Examples**: [examples/](examples/)
+- **Ethics**: [DAVNA_COVENANT.md](DAVNA_COVENANT.md)
+
+---
+
+**Love's Proof**: order emerges without force, stability without coercion, growth without exploitation.
+
+*Hash Anchor: `HIST-3ce0df425861-lovesproof-v0.3.0`*
 
 ## 🔐 Tested Ethical Invariants (Executable Proof)
 
