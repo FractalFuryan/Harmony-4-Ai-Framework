@@ -45,7 +45,24 @@ Repository = "https://github.com/harmony04/harmony04"
 Issues = "https://github.com/harmony04/harmony04/issues"
 
 [tool.setuptools]
-packages = ["harmony", "harmony.core", "harmony.models", "harmony.safeguards", "harmony.api"]
+packages = [
+    "harmony",
+    "harmony.core",
+    "harmony.models",
+    "harmony.safeguards",
+    "harmony.api",
+    "harmony.physiology",
+    "harmony.physiology.heart",
+    "harmony.physiology.respiration",
+    "harmony.physiology.shared",
+    "harmony.invariants",
+    "harmony.ops",
+    "harmony.coupling",
+    "harmony.dialogue",
+    "heart_field",
+    "heart_field.core",
+    "heart_field.utils",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

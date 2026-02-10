@@ -1,0 +1,1 @@
+"""Respiration-specific implementations (placeholder)."""
