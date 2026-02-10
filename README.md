@@ -57,10 +57,28 @@ harmony/
 │   ├── invariants.py   # Ethical constraint enforcement
 │   └── fractal_care_bot.py  # Dual-agent reflective system (Missy + Kat)
 │
+├── ops/                # Signal operations (AC/DC primitives)
+│   └── acdc.py          # Baseline vs fluctuation decomposition
+│
+├── invariants/         # Generalized ethical invariants
+│   ├── non_coercion.py  # G > 0 while S decreases
+│   ├── consent_locking.py # Consent-as-locking invariant
+│   ├── growth_bounds.py # Bounded growth laws
+│   └── loves_proof.py   # Love's Proof kernel (G > 0, S down, Pac not up)
+│
 ├── models/             # System dynamics
 │   ├── phase.py        # Phase evolution
 │   ├── role_dynamics.py# Role elasticity
 │   └── observer.py     # Observer boundaries
+│
+├── physiology/         # Domain adapters and physiology modules
+│   ├── heart/           # Heart-field scoring + Love's Proof adapter
+│   ├── respiration/     # Respiration placeholders
+│   └── shared/          # Domain-agnostic phase tools
+│
+├── coupling/           # Coupling/entrainment Love's Proof adapter
+│
+├── dialogue/           # Dialogue Love's Proof adapter
 │
 ├── safeguards/         # Protection mechanisms
 │   ├── boundary.py     # Boundary integrity guards
@@ -70,6 +88,35 @@ harmony/
 └── api/
     └── public.py       # Explicitly safe surface
 ```
+
+---
+
+## Love's Proof + AC/DC System
+
+HarmonyO4 now includes a universal non-coercive growth invariant and AC/DC signal
+operators. The kernel formalizes:
+
+$G > 0 \wedge dS/dt < 0 \wedge P_{ac} \le 0$
+
+Where $G = d/dt \log(C + \epsilon)$ and $P_{ac}$ is the AC power trend.
+
+Quick example:
+
+```python
+import numpy as np
+from harmony import LovesProofInvariant, acdc_split
+
+t = np.linspace(0, 60, 300)
+C = 0.2 + 0.6 * (1 - np.exp(-t / 20))
+S = 1.0 - 0.5 * (t / t[-1])
+x = 0.2 + 0.02 * np.sin(2 * np.pi * t / 5)
+
+invariant = LovesProofInvariant()
+result = invariant.check(t, C, S, x)
+print(result["invariant_holds"], result["violation_reason"])
+```
+
+See the full extension notes in [docs/math/extensions.md](docs/math/extensions.md).
 
 ---
 
@@ -107,6 +154,22 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install package
 pip install -e ".[dev]"
+```
+
+---
+
+## Testing
+
+Run the full suite with coverage (coverage gate is 85%):
+
+```bash
+pytest --cov=harmony --cov-report=term-missing --cov-fail-under=85
+```
+
+Run the mathematical suite directly:
+
+```bash
+python tests/math/run_math_tests.py
 ```
 
 ---
