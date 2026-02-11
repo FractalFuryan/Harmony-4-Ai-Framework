@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import cast
 import numpy as np
 
 EPS = 1e-12
@@ -8,8 +9,7 @@ def zscore(x: np.ndarray, eps: float = 1e-9) -> np.ndarray:
     x = np.asarray(x, dtype=float)
     mean = np.mean(x)
     std = np.std(x)
-    result: np.ndarray = (x - mean) / (std + eps)
-    return result
+    return cast(np.ndarray, (x - mean) / (std + eps))
 
 def stress_composite_physio(
     eda_phasic: np.ndarray,
@@ -27,8 +27,7 @@ def stress_composite_physio(
     lfhf = zscore(lf_hf_ratio)
     rmssd_z = zscore(rmssd)
     stress = w_eda * eda + w_lfhf * lfhf - w_rmssd * rmssd_z
-    result: np.ndarray = np.maximum(stress, 0.0)
-    return result
+    return cast(np.ndarray, np.maximum(stress, 0.0))
 
 def stress_velocity_energy(x: np.ndarray, dt: float) -> np.ndarray:
     """
@@ -39,13 +38,11 @@ def stress_velocity_energy(x: np.ndarray, dt: float) -> np.ndarray:
         return np.zeros_like(x)
     dx = np.gradient(x, dt)
     stress = dx**2
-    result: np.ndarray = np.maximum(stress, 0.0)
-    return result
+    return cast(np.ndarray, np.maximum(stress, 0.0))
 
 def stress_prediction_error(err: np.ndarray) -> np.ndarray:
     """
     Surprise / prediction error proxy: squared error.
     """
     err = np.asarray(err, dtype=float)
-    result: np.ndarray = np.maximum(err**2, 0.0)
-    return result
+    return cast(np.ndarray, np.maximum(err**2, 0.0))
