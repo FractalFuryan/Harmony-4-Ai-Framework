@@ -9,7 +9,7 @@ def zscore(x: np.ndarray, eps: float = 1e-9) -> np.ndarray:
     x = np.asarray(x, dtype=float)
     mean = np.mean(x)
     std = np.std(x)
-    return (x - mean) / (std + eps)
+    return np.asarray((x - mean) / (std + eps))
 
 
 def stress_composite_physio(
@@ -40,7 +40,7 @@ def stress_velocity_energy(x: np.ndarray, dt: float) -> np.ndarray:
         return np.zeros_like(x)
     dx = np.gradient(x, dt)
     stress = dx**2
-    return np.maximum(stress, 0.0)
+    return np.asarray(np.maximum(stress, 0.0))
 
 
 def stress_prediction_error(err: np.ndarray) -> np.ndarray:
@@ -48,4 +48,4 @@ def stress_prediction_error(err: np.ndarray) -> np.ndarray:
     Surprise / prediction error proxy: squared error.
     """
     err = np.asarray(err, dtype=float)
-    return np.maximum(err**2, 0.0)
+    return np.asarray(np.maximum(err**2, 0.0))

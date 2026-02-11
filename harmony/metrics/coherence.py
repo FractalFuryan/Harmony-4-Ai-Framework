@@ -22,7 +22,7 @@ def coherence_kuramoto(phases: np.ndarray) -> np.ndarray:
     phasors = np.exp(1j * phases)
     mean_phasor = np.mean(phasors, axis=0)
     r = np.abs(mean_phasor)
-    return np.clip(r, 0.0, 1.0)
+    return np.asarray(np.clip(r, 0.0, 1.0))
 
 
 def coherence_phase_concentration(phase: np.ndarray) -> float:
