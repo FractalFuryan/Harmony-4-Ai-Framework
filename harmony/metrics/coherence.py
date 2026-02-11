@@ -4,7 +4,6 @@ import numpy as np
 
 EPS = 1e-12
 
-
 def coherence_kuramoto(phases: np.ndarray) -> np.ndarray:
     """
     Kuramoto order parameter magnitude R(t) for N oscillators:
@@ -22,7 +21,8 @@ def coherence_kuramoto(phases: np.ndarray) -> np.ndarray:
     phasors = np.exp(1j * phases)
     mean_phasor = np.mean(phasors, axis=0)
     r = np.abs(mean_phasor)
-    return np.clip(r, 0.0, 1.0)
+    result: np.ndarray = np.clip(r, 0.0, 1.0)
+    return result
 
 
 def coherence_phase_concentration(phase: np.ndarray) -> float:
