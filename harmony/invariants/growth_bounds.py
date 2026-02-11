@@ -14,7 +14,7 @@ class GrowthBoundsInvariant:
 
     def __init__(self, growth_law: Callable[[np.ndarray, float], np.ndarray] | None = None) -> None:
         if growth_law is None:
-            self.growth_law = self._logistic_growth
+            self.growth_law: Callable[[np.ndarray, float], np.ndarray] = self._logistic_growth
         else:
             self.growth_law = growth_law
 
@@ -23,7 +23,7 @@ class GrowthBoundsInvariant:
 
     def _gompertz_growth(self, x: np.ndarray, alpha: float) -> np.ndarray:
         x_safe = np.clip(x, 1e-6, 1.0)
-        return alpha * x * np.log(1.0 / x_safe)
+        return alpha * x * np.log(1.0 / x_safe)  # type: ignore[no-any-return]
 
     def check_boundedness(
         self,

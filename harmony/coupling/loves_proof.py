@@ -13,7 +13,7 @@ class CouplingLovesProof:
     """Apply Love's Proof to coupling dynamics."""
 
     def __init__(self, **kwargs: object) -> None:
-        self.invariant = LovesProofInvariant(**kwargs)
+        self.invariant = LovesProofInvariant(**kwargs)  # type: ignore[arg-type]
 
     def check_entrainment(
         self,

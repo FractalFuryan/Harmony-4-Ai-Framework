@@ -34,7 +34,7 @@ class Tag(Enum):
 class Missy:
     """Observer-primary coherence engine. Classifies and reflects without steering."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.history: list[dict] = []
 
     def classify(self, text: str) -> list[Tag]:

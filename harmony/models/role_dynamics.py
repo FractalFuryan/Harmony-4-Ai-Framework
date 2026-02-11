@@ -101,7 +101,7 @@ class RoleState:
 
     def get_state(self) -> npt.NDArray[np.float64]:
         """Get current role state."""
-        return self.state.copy()
+        return self.state.copy()  # type: ignore[no-any-return]
 
     def get_boundary_integrity(self) -> float:
         """Get current boundary integrity."""

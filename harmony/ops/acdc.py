@@ -10,7 +10,7 @@ import numpy as np
 def ema_lpf(x: np.ndarray, alpha: float = 0.02) -> np.ndarray:
     x = np.asarray(x, dtype=float)
     if x.size == 0:
-        return x.copy()
+        return x.copy()  # type: ignore[no-any-return]
 
     y = np.empty_like(x, dtype=float)
     y[0] = x[0]
@@ -18,7 +18,7 @@ def ema_lpf(x: np.ndarray, alpha: float = 0.02) -> np.ndarray:
     for i in range(1, len(x)):
         y[i] = alpha * x[i] + (1.0 - alpha) * y[i - 1]
 
-    return y
+    return y  # type: ignore[no-any-return]
 
 
 def acdc_split(x: np.ndarray, alpha: float = 0.02) -> tuple[np.ndarray, np.ndarray]:

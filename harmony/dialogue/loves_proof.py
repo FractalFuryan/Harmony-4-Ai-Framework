@@ -13,7 +13,7 @@ class DialogueLovesProof:
     """Apply Love's Proof to dialogue influence dynamics."""
 
     def __init__(self, **kwargs: object) -> None:
-        self.invariant = LovesProofInvariant(**kwargs)
+        self.invariant = LovesProofInvariant(**kwargs)  # type: ignore[arg-type]
 
     def check_influence(
         self,

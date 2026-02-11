@@ -18,8 +18,8 @@ class SignalPreprocessor:
         self.resp_band = resp_band
 
     def apply_notch_filter(self, x: np.ndarray, q: float = 30.0) -> np.ndarray:
-        b, a = signal.iirnotch(self.notch_freq, q, self.fs)
-        return signal.filtfilt(b, a, x)
+        b, a = signal.iirnotch(self.notch_freq, q, self.fs)  # type: ignore[misc]
+        return signal.filtfilt(b, a, x)  # type: ignore[no-any-return]
 
     def apply_bandpass(
         self, x: np.ndarray, band: tuple[float, float], order: int = 4
@@ -27,16 +27,16 @@ class SignalPreprocessor:
         nyquist = self.fs / 2.0
         low = band[0] / nyquist
         high = band[1] / nyquist
-        b, a = signal.butter(order, [low, high], btype="band")
-        return signal.filtfilt(b, a, x)
+        b, a = signal.butter(order, [low, high], btype="band")  # type: ignore[misc]
+        return signal.filtfilt(b, a, x)  # type: ignore[no-any-return]
 
     def remove_baseline_drift(
         self, x: np.ndarray, cutoff: float = 0.5, order: int = 2
     ) -> np.ndarray:
         nyquist = self.fs / 2.0
         high = cutoff / nyquist
-        b, a = signal.butter(order, high, btype="high")
-        return signal.filtfilt(b, a, x)
+        b, a = signal.butter(order, high, btype="high")  # type: ignore[misc]
+        return signal.filtfilt(b, a, x)  # type: ignore[no-any-return]
 
     def preprocess_heart_signal(self, x: np.ndarray, remove_drift: bool = True) -> np.ndarray:
         x_clean = x.copy()
@@ -79,9 +79,9 @@ class SignalPreprocessor:
         raise ValueError(f"Unknown method: {method}")
 
     def detect_r_peaks(self, ecg_signal: np.ndarray) -> np.ndarray:
-        peaks, _ = signal.find_peaks(
+        peaks, _ = signal.find_peaks(  # type: ignore[misc]
             ecg_signal,
             distance=int(0.5 * self.fs),
             height=np.percentile(ecg_signal, 75),
         )
-        return peaks
+        return peaks  # type: ignore[no-any-return]

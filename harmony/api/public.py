@@ -45,7 +45,7 @@ def create_observer(
     observer_id: str,
     state_dim: int,
     enable_consent_tracking: bool = True,
-) -> tuple[Observer, ConsentManager]:
+) -> tuple[Observer, ConsentManager | None]:
     """
     Factory function to create observer with consent management.
 
@@ -73,7 +73,7 @@ def create_phase_system(
     initial_phase: float = 0.0,
     enable_drift_detection: bool = True,
     drift_threshold: float = 0.1,
-) -> tuple[PhaseModel, PhaseDriftDetector]:
+) -> tuple[PhaseModel, PhaseDriftDetector | None]:
     """
     Factory function to create phase system with drift detection.
 
@@ -109,7 +109,7 @@ def create_guarded_role(
     state_dim: int,
     min_boundary: float = 0.8,
     enable_boundary_guard: bool = True,
-) -> tuple[RoleState, BoundaryGuard]:
+) -> tuple[RoleState, BoundaryGuard | None]:
     """
     Factory function to create role with boundary protection.
 

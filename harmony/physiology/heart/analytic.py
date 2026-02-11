@@ -21,4 +21,4 @@ class AnalyticSignal:
         return phase_tools.remove_linear_phase_trend(phase, t)
 
     def instantaneous_frequency(self, phase: np.ndarray) -> np.ndarray:
-        return np.gradient(phase) * self.fs / (2.0 * np.pi)
+        return np.gradient(phase) * self.fs / (2.0 * np.pi)  # type: ignore[no-any-return]
