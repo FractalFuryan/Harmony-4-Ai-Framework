@@ -5,6 +5,7 @@ import numpy as np
 
 EPS = 1e-12
 
+
 def coherence_kuramoto(phases: np.ndarray) -> np.ndarray:
     """
     Kuramoto order parameter magnitude R(t) for N oscillators:
@@ -17,12 +18,13 @@ def coherence_kuramoto(phases: np.ndarray) -> np.ndarray:
         # Single oscillator is perfectly phase-concentrated by definition.
         return np.ones_like(phases, dtype=float)
     if phases.ndim != 2:
-        raise ValueError("phases must be shape (N, T) or (T;)")
+        raise ValueError("phases must be shape (N, T) or (T,)")
 
     phasors = np.exp(1j * phases)
     mean_phasor = np.mean(phasors, axis=0)
     r = np.abs(mean_phasor)
     return cast(np.ndarray, np.clip(r, 0.0, 1.0))
+
 
 def coherence_phase_concentration(phase: np.ndarray) -> float:
     """
@@ -34,6 +36,7 @@ def coherence_phase_concentration(phase: np.ndarray) -> float:
     phase = np.asarray(phase, dtype=float)
     c_value = np.abs(np.mean(np.exp(1j * phase)))
     return float(np.clip(c_value, 0.0, 1.0))
+
 
 def coherence_spectral_concentration(
     x: np.ndarray,
@@ -60,6 +63,7 @@ def coherence_spectral_concentration(
         return 0.0
     band = float(np.sum(power[mask]))
     return float(np.clip(band / total, 0.0, 1.0))
+
 
 def coherence_compression_gain(
     loss_model: np.ndarray,
