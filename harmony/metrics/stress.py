@@ -1,15 +1,16 @@
 from __future__ import annotations
 
 import numpy as np
+from numpy.typing import NDArray
 
 EPS = 1e-12
 
 
 def stress_composite_physio(
-    heart_rate: np.ndarray,
-    eda: np.ndarray | None = None,
-    hrv: np.ndarray | None = None,
-) -> np.ndarray:
+    heart_rate: NDArray[np.floating],
+    eda: NDArray[np.floating] | None = None,
+    hrv: NDArray[np.floating] | None = None,
+) -> NDArray[np.floating]:
     """
     Composite physiological stress metric combining multiple signals.
 
@@ -56,14 +57,14 @@ def stress_composite_physio(
 
     # Average all components
     composite = np.mean(components, axis=0)
-    return np.clip(composite, 0.0, 1.0)
+    return np.asarray(np.clip(composite, 0.0, 1.0), dtype=float)
 
 
 def stress_prediction_error(
-    predictions: np.ndarray,
-    targets: np.ndarray,
+    predictions: NDArray[np.floating],
+    targets: NDArray[np.floating],
     baseline_error: float | None = None,
-) -> np.ndarray:
+) -> NDArray[np.floating]:
     """
     Stress derived from prediction error / surprise.
 
@@ -92,20 +93,20 @@ def stress_prediction_error(
 
     # Normalize by baseline or maximum error
     if baseline_error is None:
-        baseline_error = np.max(error)
+        baseline_error = float(np.max(error))
 
     if baseline_error > EPS:
         stress = error / baseline_error
     else:
         stress = np.zeros_like(error)
 
-    return np.clip(stress, 0.0, 1.0)
+    return np.asarray(np.clip(stress, 0.0, 1.0), dtype=float)
 
 
 def stress_velocity_energy(
-    signal: np.ndarray,
+    signal: NDArray[np.floating],
     window_size: int = 10,
-) -> np.ndarray:
+) -> NDArray[np.floating]:
     """
     Stress derived from rate of change / kinetic energy.
 
@@ -124,7 +125,7 @@ def stress_velocity_energy(
     signal = np.asarray(signal, dtype=float)
 
     if signal.size < 2:
-        return np.zeros_like(signal)
+        return np.asarray(np.zeros_like(signal), dtype=float)
 
     # Compute first-order differences (velocity)
     velocity = np.diff(signal, prepend=signal[0])
@@ -146,4 +147,4 @@ def stress_velocity_energy(
     else:
         stress = np.zeros_like(energy)
 
-    return np.clip(stress, 0.0, 1.0)
+    return np.asarray(np.clip(stress, 0.0, 1.0), dtype=float)

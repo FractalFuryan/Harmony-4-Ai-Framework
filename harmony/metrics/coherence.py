@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from typing import cast
 import numpy as np
+from numpy.typing import NDArray
 
 EPS = 1e-12
 
 
-def coherence_kuramoto(phases: np.ndarray) -> np.ndarray:
+def coherence_kuramoto(phases: NDArray[np.floating]) -> NDArray[np.floating]:
     """
     Kuramoto order parameter magnitude R(t) for N oscillators:
         R(t) = |(1/N) * sum_k exp(i * phi_k(t))|
@@ -16,17 +16,17 @@ def coherence_kuramoto(phases: np.ndarray) -> np.ndarray:
     phases = np.asarray(phases, dtype=float)
     if phases.ndim == 1:
         # Single oscillator is perfectly phase-concentrated by definition.
-        return np.ones_like(phases, dtype=float)
+        return np.asarray(np.ones_like(phases, dtype=float), dtype=float)
     if phases.ndim != 2:
         raise ValueError("phases must be shape (N, T) or (T,)")
 
     phasors = np.exp(1j * phases)
     mean_phasor = np.mean(phasors, axis=0)
     r = np.abs(mean_phasor)
-    return cast(np.ndarray, np.clip(r, 0.0, 1.0))
+    return np.asarray(np.clip(r, 0.0, 1.0), dtype=float)
 
 
-def coherence_phase_concentration(phase: np.ndarray) -> float:
+def coherence_phase_concentration(phase: NDArray[np.floating]) -> float:
     """
     Phase concentration:
         C = | mean(exp(i * phase)) |
@@ -39,7 +39,7 @@ def coherence_phase_concentration(phase: np.ndarray) -> float:
 
 
 def coherence_spectral_concentration(
-    x: np.ndarray,
+    x: NDArray[np.floating],
     fs: float,
     f0: float,
     bandwidth: float = 0.1,
@@ -66,10 +66,10 @@ def coherence_spectral_concentration(
 
 
 def coherence_compression_gain(
-    loss_model: np.ndarray,
-    loss_baseline: np.ndarray,
+    loss_model: NDArray[np.floating],
+    loss_baseline: NDArray[np.floating],
     eps: float = 1e-12,
-) -> np.ndarray:
+) -> NDArray[np.floating]:
     """
     Predictive compression / structure gain:
         C = 1 - (L_model / L_baseline)
@@ -83,4 +83,4 @@ def coherence_compression_gain(
 
     ratio = loss_model / (loss_baseline + eps)
     c_value = 1.0 - ratio
-    return np.clip(c_value, 0.0, 1.0)
+    return np.asarray(np.clip(c_value, 0.0, 1.0), dtype=float)
