@@ -14,7 +14,8 @@ from harmony.ops.acdc import ac_power, acdc_split
 class LovesProofInvariant:
     """Enforce non-coercive growth with coherence and stress dynamics."""
 
-    def __init__(self,
+    def __init__(
+        self,
         eps: float = 1e-6,
         alpha: float = 0.02,
         min_window: int = 30,
@@ -25,7 +26,8 @@ class LovesProofInvariant:
         self.min_window = min_window
         self.require_dc_trend = require_dc_trend
 
-    def check(self,
+    def check(
+        self,
         t: np.ndarray,
         c: np.ndarray,
         s: np.ndarray,
@@ -88,7 +90,8 @@ class LovesProofInvariant:
             "violation_reason": self._analyze_violation(g_mean, s_slope, pac_trend, s_dc_slope),
         }
 
-    def check_continuous(self,
+    def check_continuous(
+        self,
         t: np.ndarray,
         c: np.ndarray,
         s: np.ndarray,
