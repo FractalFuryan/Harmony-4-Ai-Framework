@@ -102,7 +102,7 @@ class EntrainmentMetrics:
     def kuramoto_order_parameter(self, phases: np.ndarray) -> np.ndarray:
         complex_phasors = np.exp(1j * phases)
         mean_phasor = np.mean(complex_phasors, axis=0)
-        return np.abs(mean_phasor)
+        return np.abs(mean_phasor)  # type: ignore[no-any-return]
 
     def consent_gate(
         self,

@@ -53,15 +53,15 @@ class PhaseCoherence:
 
     def _detrend_within_window(self, phase: np.ndarray) -> np.ndarray:
         if len(phase) == 0:
-            return phase.copy()
+            return phase.copy()  # type: ignore[no-any-return]
         if len(phase) == 1:
             return np.array([0.0])
 
         n = len(phase)
         t = np.arange(n) / self.fs
-        slope, intercept, _, _, _ = stats.linregress(t, phase)
+        slope, intercept, _, _, _ = stats.linregress(t, phase)  # type: ignore[misc]
         trend = intercept + slope * t
-        return phase - trend
+        return phase - trend  # type: ignore[no-any-return]
 
     def coherence_gain_rate(
         self, coherence_values: np.ndarray, time_points: np.ndarray

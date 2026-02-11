@@ -172,7 +172,7 @@ class HeartFieldScorer:
                 else np.mean(heart_coherence)
             ),
             plv_dict=plv_dict,
-            **kwargs,
+            **kwargs,  # type: ignore[arg-type]
         )
 
         loves_proof_result = None

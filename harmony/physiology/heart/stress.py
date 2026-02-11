@@ -91,6 +91,8 @@ class StressIndexBuilder:
             "weights_used": self.weights,
             "method": self.method,
         }
+        components_dict: dict[str, dict[str, float]] = {}
+        results["components"] = components_dict
 
         comp = components.copy() if components else {}
 
@@ -121,7 +123,7 @@ class StressIndexBuilder:
                 if np.isfinite(value):
                     weighted_sum += weight * value
                     total_weight += abs(weight)
-                    results["components"][name] = {
+                    components_dict[name] = {
                         "value": float(value),
                         "weight": float(weight),
                         "contribution": float(weight * value),
@@ -147,7 +149,7 @@ class StressIndexBuilder:
 
         time_points = np.zeros(n_windows)
         stress_values = np.zeros(n_windows)
-        component_history = {name: [] for name in self.weights.keys()}
+        component_history: dict[str, list[float]] = {name: [] for name in self.weights.keys()}
 
         for i in range(n_windows):
             start = i * step_samples
@@ -158,15 +160,15 @@ class StressIndexBuilder:
                 if signal_data is not None and len(signal_data) >= end:
                     windowed_signals[name] = signal_data[start:end]
 
-            result = self.compute_stress_index(**windowed_signals)
+            result = self.compute_stress_index(**windowed_signals)  # type: ignore[arg-type]
 
             time_points[i] = start / self.fs
-            stress_values[i] = float(result["stress_index"])
+            stress_values[i] = float(result["stress_index"])  # type: ignore[arg-type]
 
-            components = result["components"]
+            components = result["components"]  # type: ignore[assignment]
             for name in self.weights.keys():
-                if name in components:
-                    component_history[name].append(float(components[name]["value"]))
+                if name in components:  # type: ignore[operator]
+                    component_history[name].append(float(components[name]["value"]))  # type: ignore[index]
                 else:
                     component_history[name].append(float("nan"))
 

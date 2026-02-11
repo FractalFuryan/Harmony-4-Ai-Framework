@@ -20,16 +20,16 @@ def compute_analytic_signal(x: np.ndarray, fs: float) -> tuple[np.ndarray, np.nd
 def remove_linear_phase_trend(phase: np.ndarray, t: np.ndarray | None = None) -> np.ndarray:
     """Remove linear trend from phase using regression."""
     if len(phase) == 0:
-        return phase.copy()
+        return phase.copy()  # type: ignore[no-any-return]
     if len(phase) == 1:
         return np.array([0.0])
 
     if t is None:
         t = np.arange(len(phase))
 
-    slope, intercept, _, _, _ = stats.linregress(t, phase)
+    slope, intercept, _, _, _ = stats.linregress(t, phase)  # type: ignore[misc]
     trend = intercept + slope * t
-    return phase - trend
+    return phase - trend  # type: ignore[no-any-return]
 
 
 def compute_phase_concentration(phase: np.ndarray) -> float:

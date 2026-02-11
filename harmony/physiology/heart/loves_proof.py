@@ -14,7 +14,7 @@ class PhysiologyLovesProof:
 
     def __init__(self, fs: float = 250.0, **kwargs: object) -> None:
         self.fs = fs
-        self.invariant = LovesProofInvariant(**kwargs)
+        self.invariant = LovesProofInvariant(**kwargs)  # type: ignore[arg-type]
 
     def check_heart_field(
         self,
