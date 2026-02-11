@@ -1,6 +1,6 @@
 """HarmonyO4: An open, ethical framework for modeling coherence and consent."""
 
-from harmony import invariants
+from harmony import invariants, metrics
 from harmony.core import coherence, consent, fractal_care_bot
 from harmony.core import invariants as core_invariants
 from harmony.core.coherence import CoherenceMetrics, PhaseCoherence
@@ -11,6 +11,17 @@ from harmony.coupling.loves_proof import CouplingLovesProof
 from harmony.dialogue.loves_proof import DialogueLovesProof
 from harmony.invariants import ConsentLockingInvariant, GrowthBoundsInvariant, NonCoercionInvariant
 from harmony.invariants.loves_proof import LovesProofInvariant
+from harmony.metrics.coherence import (
+    coherence_compression_gain,
+    coherence_kuramoto,
+    coherence_phase_concentration,
+    coherence_spectral_concentration,
+)
+from harmony.metrics.stress import (
+    stress_composite_physio,
+    stress_prediction_error,
+    stress_velocity_energy,
+)
 from harmony.ops.acdc import ac_power, ac_power_trend, acdc_split, dc_slope, ema_lpf
 from harmony.physiology.heart import (
     AnalyticSignal,
@@ -44,6 +55,7 @@ __all__ = [
     "fractal_care_bot",
     "core_invariants",
     "invariants",
+    "metrics",
     "ema_lpf",
     "acdc_split",
     "ac_power",
@@ -56,6 +68,13 @@ __all__ = [
     "StressIndexBuilder",
     "HeartFieldScorer",
     "phase_tools",
+    "coherence_kuramoto",
+    "coherence_phase_concentration",
+    "coherence_spectral_concentration",
+    "coherence_compression_gain",
+    "stress_composite_physio",
+    "stress_velocity_energy",
+    "stress_prediction_error",
     "NonCoercionInvariant",
     "ConsentLockingInvariant",
     "GrowthBoundsInvariant",

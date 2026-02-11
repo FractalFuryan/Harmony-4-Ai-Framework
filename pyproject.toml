@@ -57,6 +57,7 @@ packages = [
     "harmony.physiology.respiration",
     "harmony.physiology.shared",
     "harmony.invariants",
+    "harmony.metrics",
     "harmony.ops",
     "harmony.coupling",
     "harmony.dialogue",

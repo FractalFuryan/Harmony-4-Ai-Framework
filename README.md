@@ -22,31 +22,72 @@ This repository now includes **Love's Proof** — a mathematical invariant for n
 
 ## Mathematical Foundation
 
-### Love's Proof (Universal Non-Coercive Growth Invariant)
+### Love's Proof Invariant (Executable Non-Coercive Ordering)
 
-For any system with measurable:
+HarmonyØ4 includes an invariant nicknamed "Love's Proof." It is not presented as a
+universal theorem or physical law. It is an executable, domain-agnostic sufficient
+condition intended to prevent a specific failure mode: increasing order by increasing
+pressure, instability, volatility, or reactive forcing.
 
-- **Coherence** $C(t)$ (order, stability)
-- **Stress** $S(t)$ (resistance, instability)
-- **Influence carrier** $x(t)$ (coupling, pressure)
+#### Definitions
 
-The invariant is:
+The invariant evaluates three time-series over a rolling window $W$:
+
+- **Coherence** $C(t) \in (0, 1]$, a normalized order measure selected from canonical
+  definitions per domain (see harmony/metrics/coherence.py).
+- **Stress / instability** $S(t) \ge 0$, a proxy for pressure or resistance selected from
+  canonical definitions (see harmony/metrics/stress.py).
+- **Influence carrier** $x(t)$, a domain-chosen signal representing how influence is applied
+  (coupling strength, directive pressure, control effort, etc.).
+
+We decompose $x(t)$ into DC/AC (baseline + residual) via an EMA low-pass filter:
 
 $$
-\begin{aligned}
-\langle G \rangle_W &> 0 \quad &\text{(coherence grows)} \\
-\langle \dot{S} \rangle_W &< 0 \quad &\text{(stress decreases)} \\
-\langle \dot{P}_{\text{AC}} \rangle_W &\le 0 \quad &\text{(AC power does not increase)}
-\end{aligned}
+x(t) = x_{\text{DC}}(t) + x_{\text{AC}}(t), \quad x_{\text{AC}}(t) = x(t) - x_{\text{DC}}(t)
 $$
 
-where:
+Define reactive energy (AC power):
 
-- $G = \frac{d}{dt} \log(C + \epsilon)$ — coherence growth rate
-- $P_{\text{AC}}$ — AC power of the influence carrier
-- $W$ — analysis window
+$$
+P_{\text{reactive}}(t) = \langle x_{\text{AC}}(t)^2 \rangle_W
+$$
 
-**Interpretation**: order must emerge without force, pressure, or volatility exploitation.
+Define coherence growth rate:
+
+$$
+G(t) = \frac{d}{dt} \log(C(t) + \epsilon)
+$$
+
+#### Invariant (Sufficient Condition)
+
+Over window $W$:
+
+$$
+\langle G \rangle_W > 0 \quad \wedge \quad \langle \dot{S} \rangle_W < 0 \quad \wedge \quad
+\langle \dot{P}_{\text{reactive}} \rangle_W \le 0
+$$
+
+Interpretation:
+
+- Coherence must increase (in log-growth sense),
+- while stress decreases,
+- and reactive influence energy does not ramp up.
+
+This is a sufficient filter. Passing it does not prove optimality or correctness.
+Failing it is treated as a red flag that order may be rising through pressure or
+volatility.
+
+#### Explicit Metric Requirement
+
+$C(t)$ and $S(t)$ are not free variables. Each subsystem must declare which canonical
+metric definition it uses. This is enforced by code boundaries and tests to reduce
+metric gaming.
+
+#### Auditability
+
+The implementation clamps coherence to at least $\epsilon$ for numerical stability and
+returns an audit flag `clamped_C` whenever clamping occurred. Clamping is not hidden,
+and downstream systems may fail runs if clamping frequency exceeds a policy threshold.
 
 ### AC/DC Decomposition Operator
 
