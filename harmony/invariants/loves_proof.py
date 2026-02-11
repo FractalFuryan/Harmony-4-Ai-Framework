@@ -47,7 +47,7 @@ class LovesProofInvariant:
         S_win = S[-n:]
         x_win = x[-n:]
 
-        C_safe = np.clip(C_win, self.eps, 1.0)
+        C_safe = np.maximum(C_win, self.eps)
         clamped_C = bool(np.any(C_win <= 0))
         logC = np.log(C_safe)
         G = np.gradient(logC, t_win)
