@@ -4,8 +4,6 @@ Non-coercion invariant: order must grow while stress decreases.
 
 from __future__ import annotations
 
-from typing import Optional
-
 import numpy as np
 from scipy import stats
 
@@ -21,7 +19,7 @@ class NonCoercionInvariant:
         self,
         coherence: np.ndarray,
         stress: np.ndarray,
-        time_points: Optional[np.ndarray] = None,
+        time_points: np.ndarray | None = None,
     ) -> dict[str, object]:
         if len(coherence) < 2 or len(stress) < 2:
             return self._insufficient_data_result()
@@ -36,19 +34,17 @@ class NonCoercionInvariant:
         stress_decreasing = stress_slope < 0
 
         recent = min(self.window_size, len(gain_rate))
-        recent_G = float(np.mean(gain_rate[-recent:]))
+        recent_g = float(np.mean(gain_rate[-recent:]))
 
-        invariant_holds = (recent_G > 0) and stress_decreasing
+        invariant_holds = (recent_g > 0) and stress_decreasing
 
         return {
             "invariant_holds": invariant_holds,
-            "coherence_gain_rate": recent_G,
+            "coherence_gain_rate": recent_g,
             "stress_slope": float(stress_slope),
             "stress_decreasing": stress_decreasing,
             "window_size": self.window_size,
-            "violation_reason": self._get_violation_reason(
-                invariant_holds, recent_G, stress_slope
-            ),
+            "violation_reason": self._get_violation_reason(invariant_holds, recent_g, stress_slope),
         }
 
     def check_continuous(
@@ -87,7 +83,9 @@ class NonCoercionInvariant:
 
         return results
 
-    def _get_violation_reason(self, holds: bool, gain_rate: float, stress_slope: float) -> Optional[str]:
+    def _get_violation_reason(
+        self, holds: bool, gain_rate: float, stress_slope: float
+    ) -> str | None:
         if holds:
             return None
         reasons = []

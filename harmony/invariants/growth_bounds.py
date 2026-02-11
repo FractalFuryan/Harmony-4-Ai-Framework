@@ -4,7 +4,7 @@ Growth bounds invariant: growth must be self-limiting.
 
 from __future__ import annotations
 
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import numpy as np
 
@@ -12,7 +12,7 @@ import numpy as np
 class GrowthBoundsInvariant:
     """Enforce that growth follows bounded, self-limiting dynamics."""
 
-    def __init__(self, growth_law: Optional[Callable[[np.ndarray, float], np.ndarray]] = None) -> None:
+    def __init__(self, growth_law: Callable[[np.ndarray, float], np.ndarray] | None = None) -> None:
         if growth_law is None:
             self.growth_law = self._logistic_growth
         else:
@@ -53,9 +53,9 @@ class GrowthBoundsInvariant:
         return {
             "invariant_holds": invariant_holds,
             "explosive_growth": explosive_growth,
-            "max_growth_rate_observed": float(np.max(np.abs(actual_rates)))
-            if len(actual_rates) > 0
-            else 0.0,
+            "max_growth_rate_observed": (
+                float(np.max(np.abs(actual_rates))) if len(actual_rates) > 0 else 0.0
+            ),
             "saturation_level": saturation_level,
             "near_saturation": near_saturation,
             "violation_reason": self._get_violation_reason(invariant_holds, explosive_growth),
@@ -83,7 +83,7 @@ class GrowthBoundsInvariant:
 
         return x
 
-    def _get_violation_reason(self, holds: bool, explosive_growth: bool) -> Optional[str]:
+    def _get_violation_reason(self, holds: bool, explosive_growth: bool) -> str | None:
         if holds:
             return None
         if explosive_growth:

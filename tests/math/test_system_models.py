@@ -19,26 +19,29 @@ class TestMathematicalSystems:
         zeta = c / (2 * np.sqrt(m * k))
         w = w0 * np.sqrt(1 - zeta**2)
 
-        A = 1.0
+        amplitude = 1.0
         phi = 0.0
 
         t = np.linspace(0, 10, 1000)
 
-        x = A * np.exp(-zeta * w0 * t) * np.cos(w * t + phi)
-        v = -A * w0 * np.exp(-zeta * w0 * t) * (
-            zeta * np.cos(w * t + phi) - np.sqrt(1 - zeta**2) * np.sin(w * t + phi)
+        x = amplitude * np.exp(-zeta * w0 * t) * np.cos(w * t + phi)
+        v = (
+            -amplitude
+            * w0
+            * np.exp(-zeta * w0 * t)
+            * (zeta * np.cos(w * t + phi) - np.sqrt(1 - zeta**2) * np.sin(w * t + phi))
         )
 
         analytic_signal = x + 1j * np.gradient(x, t) / w
-        C = np.abs(analytic_signal) / A
+        coherence = np.abs(analytic_signal) / amplitude
 
-        S = c * v**2
-        S_normalized = S / np.max(S)
+        stress = c * v**2
+        stress_normalized = stress / np.max(stress)
 
         influence = np.zeros_like(t)
 
         invariant = LovesProofInvariant()
-        result = invariant.check(t, C, S_normalized, influence)
+        result = invariant.check(t, coherence, stress_normalized, influence)
 
         assert result["coherence_growing"] is False
         assert result["G_mean"] < 0
@@ -73,29 +76,29 @@ class TestMathematicalSystems:
         phase_diff = np.unwrap(phase_diff)
 
         window = 100
-        C = np.zeros(len(t) - window)
-        for i in range(len(C)):
+        coherence = np.zeros(len(t) - window)
+        for i in range(len(coherence)):
             window_phases = phase_diff[i : i + window]
-            C[i] = np.abs(np.mean(np.exp(1j * window_phases)))
+            coherence[i] = np.abs(np.mean(np.exp(1j * window_phases)))
 
-        t_C = t[window:]
+        t_coherence = t[window:]
 
         amplitude_mean = np.mean(amplitude)
-        S = (amplitude - amplitude_mean) ** 2
-        S = S / np.max(S)
+        stress = (amplitude - amplitude_mean) ** 2
+        stress = stress / np.max(stress)
 
         influence = mu * (1 - x**2) * v
 
-        min_len = min(len(t_C), len(S), len(influence))
-        t_align = t_C[:min_len]
-        C_align = C[:min_len]
-        S_align = S[:min_len]
+        min_len = min(len(t_coherence), len(stress), len(influence))
+        t_align = t_coherence[:min_len]
+        coherence_align = coherence[:min_len]
+        stress_align = stress[:min_len]
         influence_align = influence[:min_len]
 
         invariant = LovesProofInvariant()
-        result = invariant.check(t_align, C_align, S_align, influence_align)
+        result = invariant.check(t_align, coherence_align, stress_align, influence_align)
 
-        assert C_align.mean() > 0.8
+        assert coherence_align.mean() > 0.8
         assert abs(result["G_mean"]) < 0.1
 
     def test_lotka_volterra_predator_prey(self) -> None:
@@ -133,39 +136,40 @@ class TestMathematicalSystems:
         phase_diff = np.unwrap(phase_prey - phase_pred)
 
         window = 100
-        C = np.zeros(len(t) - window)
-        for i in range(len(C)):
+        coherence = np.zeros(len(t) - window)
+        for i in range(len(coherence)):
             window_diff = phase_diff[i : i + window]
-            C[i] = np.abs(np.mean(np.exp(1j * window_diff)))
+            coherence[i] = np.abs(np.mean(np.exp(1j * window_diff)))
 
-        t_C = t[window:]
+        t_coherence = t[window:]
 
         total_pop = prey + predator
-        S = np.abs(np.gradient(total_pop, t))
-        S = S / np.max(S)
-        S = S[window:]
+        stress = np.abs(np.gradient(total_pop, t))
+        stress = stress / np.max(stress)
+        stress = stress[window:]
 
         influence = beta * prey * predator
         influence = influence[window:]
 
         invariant = LovesProofInvariant()
-        result = invariant.check(t_C, C, S, influence)
+        result = invariant.check(t_coherence, coherence, stress, influence)
 
-        assert C.mean() > 0.7
+        assert coherence.mean() > 0.7
+        assert result["window_samples"] > 0
 
     def test_kuramoto_phase_oscillators(self) -> None:
         np.random.seed(42)
 
-        N = 20
-        K = 2.0
+        n = 20
+        k = 2.0
 
-        omega = np.random.normal(0, 1, N)
+        omega = np.random.normal(0, 1, n)
 
         dt = 0.01
         t_max = 50
         steps = int(t_max / dt)
 
-        theta = np.random.uniform(0, 2 * np.pi, N)
+        theta = np.random.uniform(0, 2 * np.pi, n)
 
         t = np.zeros(steps)
         order_param = np.zeros(steps)
@@ -178,13 +182,13 @@ class TestMathematicalSystems:
             z_series[step] = z
             order_param[step] = np.abs(z)
 
-            for i in range(N):
+            for i in range(n):
                 coupling = 0.0
-                for j in range(N):
+                for j in range(n):
                     if i != j:
                         coupling += np.sin(theta[j] - theta[i])
 
-                dtheta = omega[i] + (K / N) * coupling
+                dtheta = omega[i] + (k / n) * coupling
                 theta[i] += dtheta * dt
                 theta[i] %= 2 * np.pi
 
@@ -193,19 +197,19 @@ class TestMathematicalSystems:
         order_param = order_param[transient:]
         z_series = z_series[transient:]
 
-        C = order_param
+        coherence = order_param
 
         phase = np.unwrap(np.angle(z_series))
         freq_est = np.gradient(phase, t)
-        S = np.abs(freq_est - np.mean(freq_est))
-        S = S / np.max(S)
+        stress = np.abs(freq_est - np.mean(freq_est))
+        stress = stress / np.max(stress)
 
-        influence = np.ones_like(t) * K
+        influence = np.ones_like(t) * k
 
         invariant = LovesProofInvariant()
-        result = invariant.check(t, C, S, influence)
+        result = invariant.check(t, coherence, stress, influence)
 
-        assert C[-1] > C[0]
+        assert coherence[-1] > coherence[0]
         assert result["coherence_growing"] is True
 
     def test_linear_system_stability(self) -> None:
@@ -216,15 +220,15 @@ class TestMathematicalSystems:
             np.array([[0.0, -1.0], [1.0, 0.0]]),
         ]
 
-        for A in test_matrices:
-            eigvals = np.linalg.eigvals(A)
+        for matrix in test_matrices:
+            eigvals = np.linalg.eigvals(matrix)
             real_parts = eigvals.real
 
             t_span = (0, 20)
             t_eval = np.linspace(*t_span, 1000)
 
             def linear_system(_, x):
-                return A @ x
+                return matrix @ x
 
             x0 = [1.0, 0.0]
 
@@ -240,16 +244,16 @@ class TestMathematicalSystems:
             x2 = x2[steady_idx:]
 
             magnitude = np.sqrt(x1**2 + x2**2)
-            C = magnitude / np.max(magnitude)
+            coherence = magnitude / np.max(magnitude)
 
-            dMdt = np.gradient(magnitude, t)
-            S = np.abs(dMdt)
-            S = S / np.max(S)
+            dmdt = np.gradient(magnitude, t)
+            stress = np.abs(dmdt)
+            stress = stress / np.max(stress)
 
-            influence = np.linalg.norm(A) * np.ones_like(t)
+            influence = np.linalg.norm(matrix) * np.ones_like(t)
 
             invariant = LovesProofInvariant()
-            result = invariant.check(t, C, S, influence)
+            result = invariant.check(t, coherence, stress, influence)
 
             max_real = np.max(real_parts)
 

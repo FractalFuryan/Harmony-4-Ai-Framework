@@ -10,15 +10,15 @@ class TestConsentGate(unittest.TestCase):
         self.entrainment = EntrainmentMetrics(fs=250.0)
 
     def test_consent_gate_basic(self) -> None:
-        consent, lock = self.entrainment.consent_gate(K_eff=2.0, delta_omega=1.0)
+        consent, lock = self.entrainment.consent_gate(k_eff=2.0, delta_omega=1.0)
         self.assertTrue(consent)
         self.assertGreaterEqual(lock, 0.5)
 
-        consent, lock = self.entrainment.consent_gate(K_eff=0.05, delta_omega=0.01)
+        consent, lock = self.entrainment.consent_gate(k_eff=0.05, delta_omega=0.01)
         self.assertFalse(consent)
         self.assertEqual(lock, 0.0)
 
-        consent, lock = self.entrainment.consent_gate(K_eff=1.0, delta_omega=2.0)
+        consent, lock = self.entrainment.consent_gate(k_eff=1.0, delta_omega=2.0)
         self.assertFalse(consent)
         self.assertEqual(lock, 0.0)
 
@@ -40,7 +40,7 @@ class TestConsentGate(unittest.TestCase):
 
     def test_max_permissible_lock(self) -> None:
         consent, lock = self.entrainment.consent_gate(
-            K_eff=10.0, delta_omega=0.001, max_permissible_lock=0.8
+            k_eff=10.0, delta_omega=0.001, max_permissible_lock=0.8
         )
         self.assertTrue(consent)
         self.assertLessEqual(lock, 0.8)
@@ -52,9 +52,7 @@ class TestConsentGate(unittest.TestCase):
         phase_source = 2 * np.pi * 1.0 * t
 
         phase_receiver = 2 * np.pi * 1.2 * t[: len(t) // 2]
-        phase_receiver = np.concatenate(
-            [phase_receiver, 2 * np.pi * 1.0 * t[len(t) // 2 :] + 0.5]
-        )
+        phase_receiver = np.concatenate([phase_receiver, 2 * np.pi * 1.0 * t[len(t) // 2 :] + 0.5])
 
         results = self.entrainment.revocable_entrainment(
             phase_source, phase_receiver, stress_receiver=0.3

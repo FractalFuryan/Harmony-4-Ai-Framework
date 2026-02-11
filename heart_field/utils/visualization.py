@@ -37,9 +37,7 @@ def plot_phases(t: np.ndarray, phases: dict[str, np.ndarray], title: str = "Phas
     fig.tight_layout()
 
 
-def plot_metrics(
-    t: np.ndarray, metrics: dict[str, np.ndarray], title: str = "Metrics"
-) -> None:
+def plot_metrics(t: np.ndarray, metrics: dict[str, np.ndarray], title: str = "Metrics") -> None:
     plt = _require_matplotlib()
     fig, ax = plt.subplots(figsize=(12, 4))
     for name, data in metrics.items():

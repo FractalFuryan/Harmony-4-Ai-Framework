@@ -15,15 +15,15 @@ class TestEdgeCases:
     def test_zero_coherence(self) -> None:
         t = np.linspace(0, 10, 100)
 
-        C_zero = np.maximum(0.01 * np.exp(-t), 1e-12)
-        S = 0.8 - 0.5 * (t / t[-1])
+        c_zero = np.maximum(0.01 * np.exp(-t), 1e-12)
+        s = 0.8 - 0.5 * (t / t[-1])
         x = 0.3 * np.ones_like(t)
 
         invariant = LovesProofInvariant(eps=1e-12)
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            result = invariant.check(t, C_zero, S, x)
+            result = invariant.check(t, c_zero, s, x)
 
         assert result["G_mean"] < 0
         assert result["coherence_growing"] is False
@@ -32,16 +32,14 @@ class TestEdgeCases:
         t = np.linspace(0, 5, 50)
 
         for eps in [1e-6, 1e-9, 1e-12, 1e-15]:
-            C_tiny = eps * np.ones_like(t)
-            S = 0.5 * np.ones_like(t)
+            c_tiny = eps * np.ones_like(t)
+            s = 0.5 * np.ones_like(t)
             x = 0.1 * np.ones_like(t)
 
             invariant = LovesProofInvariant(eps=eps)
-            result = invariant.check(t, C_tiny, S, x)
+            result = invariant.check(t, c_tiny, s, x)
 
-            assert not np.any(
-                np.isnan([result["G_mean"], result["S_slope"], result["Pac_trend"]])
-            )
+            assert not np.any(np.isnan([result["G_mean"], result["S_slope"], result["Pac_trend"]]))
             assert abs(result["G_mean"]) < 1e-3
 
     def test_constant_signals(self) -> None:
@@ -53,13 +51,13 @@ class TestEdgeCases:
             (0.0, 1.0, 1.0),
         ]
 
-        for C_const, S_const, x_const in test_cases:
-            C = C_const * np.ones_like(t)
-            S = S_const * np.ones_like(t)
+        for c_const, s_const, x_const in test_cases:
+            c = c_const * np.ones_like(t)
+            s = s_const * np.ones_like(t)
             x = x_const * np.ones_like(t)
 
             invariant = LovesProofInvariant()
-            result = invariant.check(t, C, S, x)
+            result = invariant.check(t, c, s, x)
 
             assert abs(result["G_mean"]) < 1e-6
             assert abs(result["S_slope"]) < 1e-6
@@ -76,16 +74,14 @@ class TestEdgeCases:
 
             t = np.arange(0, 1, 1 / fs)
 
-            C = 0.5 + 0.1 * np.sin(2 * np.pi * freq * t)
-            S = 0.6 + 0.05 * np.sin(2 * np.pi * 0.8 * freq * t)
+            c = 0.5 + 0.1 * np.sin(2 * np.pi * freq * t)
+            s = 0.6 + 0.05 * np.sin(2 * np.pi * 0.8 * freq * t)
             x = 0.3 + 0.02 * np.sin(2 * np.pi * 0.6 * freq * t)
 
             invariant = LovesProofInvariant()
-            result = invariant.check(t, C, S, x)
+            result = invariant.check(t, c, s, x)
 
-            assert not np.any(
-                np.isnan([result["G_mean"], result["S_slope"], result["Pac_trend"]])
-            )
+            assert not np.any(np.isnan([result["G_mean"], result["S_slope"], result["Pac_trend"]]))
 
     def test_aliasing_robustness(self) -> None:
         fs = 100
@@ -114,15 +110,15 @@ class TestEdgeCases:
             (1e6, 1e-6, 1e9),
         ]
 
-        for C_scale, S_scale, x_scale in extreme_cases:
-            C = C_scale * (0.5 + 0.1 * np.sin(2 * np.pi * t / 5))
-            S = S_scale * (0.6 - 0.2 * (t / t[-1]))
+        for c_scale, s_scale, x_scale in extreme_cases:
+            c = c_scale * (0.5 + 0.1 * np.sin(2 * np.pi * t / 5))
+            s = s_scale * (0.6 - 0.2 * (t / t[-1]))
             x = x_scale * (0.3 + 0.05 * np.sin(2 * np.pi * t / 3))
 
             invariant = LovesProofInvariant()
 
             try:
-                result = invariant.check(t, C, S, x)
+                result = invariant.check(t, c, s, x)
 
                 assert np.isfinite(result["G_mean"])
                 assert np.isfinite(result["S_slope"])
@@ -133,12 +129,12 @@ class TestEdgeCases:
 
     def test_single_sample_edge(self) -> None:
         t = np.array([0.0, 1.0])
-        C = np.array([0.5, 0.6])
-        S = np.array([0.8, 0.7])
+        c = np.array([0.5, 0.6])
+        s = np.array([0.8, 0.7])
         x = np.array([0.2, 0.3])
 
         invariant = LovesProofInvariant(min_window=2)
-        result = invariant.check(t, C, S, x)
+        result = invariant.check(t, c, s, x)
 
         assert "invariant_holds" in result
         assert "violation_reason" in result
@@ -151,12 +147,12 @@ class TestEdgeCases:
     def test_discontinuous_signals(self) -> None:
         t = np.linspace(0, 10, 100)
 
-        C_step = np.where(t < 5, 0.3, 0.8)
-        S_step = np.where(t < 5, 0.9, 0.4)
+        c_step = np.where(t < 5, 0.3, 0.8)
+        s_step = np.where(t < 5, 0.9, 0.4)
         x_step = np.where(t < 5, 0.1, 0.5)
 
         invariant = LovesProofInvariant()
-        result = invariant.check(t, C_step, S_step, x_step)
+        result = invariant.check(t, c_step, s_step, x_step)
 
         assert np.isfinite(result["G_mean"])
         assert np.isfinite(result["S_slope"])
@@ -166,46 +162,46 @@ class TestEdgeCases:
         late_mask = t > 7.5
 
         if np.any(early_mask) and np.any(late_mask):
-            C_early = np.mean(C_step[early_mask])
-            C_late = np.mean(C_step[late_mask])
-            S_early = np.mean(S_step[early_mask])
-            S_late = np.mean(S_step[late_mask])
+            c_early = np.mean(c_step[early_mask])
+            c_late = np.mean(c_step[late_mask])
+            s_early = np.mean(s_step[early_mask])
+            s_late = np.mean(s_step[late_mask])
 
-            assert C_late > C_early
-            assert S_late < S_early
+            assert c_late > c_early
+            assert s_late < s_early
 
     def test_nan_and_inf_handling(self) -> None:
         t = np.linspace(0, 10, 100)
 
-        C = 0.5 + 0.1 * np.sin(2 * np.pi * t / 5)
-        S = 0.7 - 0.3 * (t / t[-1])
+        c = 0.5 + 0.1 * np.sin(2 * np.pi * t / 5)
+        s = 0.7 - 0.3 * (t / t[-1])
         x = 0.3 + 0.02 * np.sin(2 * np.pi * t / 3)
 
         invariant = LovesProofInvariant()
 
-        C_nan = C.copy()
-        C_nan[50] = np.nan
+        c_nan = c.copy()
+        c_nan[50] = np.nan
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            result_nan = invariant.check(t, C_nan, S, x)
+            result_nan = invariant.check(t, c_nan, s, x)
 
         assert "invariant_holds" in result_nan
 
-        C_inf = C.copy()
-        C_inf[75] = np.inf
+        c_inf = c.copy()
+        c_inf[75] = np.inf
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            result_inf = invariant.check(t, C_inf, S, x)
+            result_inf = invariant.check(t, c_inf, s, x)
 
         assert "invariant_holds" in result_inf
 
-        C_neg_inf = C.copy()
-        C_neg_inf[25] = -np.inf
+        c_neg_inf = c.copy()
+        c_neg_inf[25] = -np.inf
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            result_neg_inf = invariant.check(t, C_neg_inf, S, x)
+            result_neg_inf = invariant.check(t, c_neg_inf, s, x)
 
         assert "invariant_holds" in result_neg_inf

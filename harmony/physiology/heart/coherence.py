@@ -33,7 +33,9 @@ class PhaseCoherence:
             return 0.0
         return float(power_in_band / total_power)
 
-    def sliding_coherence(self, phase: np.ndarray, step_sec: float = 1.0) -> tuple[np.ndarray, np.ndarray]:
+    def sliding_coherence(
+        self, phase: np.ndarray, step_sec: float = 1.0
+    ) -> tuple[np.ndarray, np.ndarray]:
         step_samples = int(step_sec * self.fs)
         n_windows = (len(phase) - self.window_samples) // step_samples + 1
 
@@ -61,7 +63,9 @@ class PhaseCoherence:
         trend = intercept + slope * t
         return phase - trend
 
-    def coherence_gain_rate(self, coherence_values: np.ndarray, time_points: np.ndarray) -> np.ndarray:
+    def coherence_gain_rate(
+        self, coherence_values: np.ndarray, time_points: np.ndarray
+    ) -> np.ndarray:
         epsilon = 1e-6
         log_coherence = np.log(coherence_values + epsilon)
         if len(time_points) > 1:

@@ -67,8 +67,8 @@ def test_bias_corrected_plv() -> None:
 
 def test_compute_coherence_gain_rate() -> None:
     t = np.linspace(0, 5, 200)
-    C = 0.1 * np.exp(0.3 * t)
-    gain = compute_coherence_gain_rate(C, t)
+    c = 0.1 * np.exp(0.3 * t)
+    gain = compute_coherence_gain_rate(c, t)
     assert np.mean(gain) > 0
 
     single_gain = compute_coherence_gain_rate(np.array([0.5]), np.array([0.0]))

@@ -69,14 +69,14 @@ def test_entrainment_and_consent() -> None:
     times, plv_series = entrainment.sliding_plv(phase1, phase2, window_sec=1.0, step_sec=0.5)
     assert len(times) == len(plv_series)
 
-    locked, delta = entrainment.arnold_tongue_boundary(1.0, 1.0, K_eff=0.1)
+    locked, delta = entrainment.arnold_tongue_boundary(1.0, 1.0, k_eff=0.1)
     assert locked is True
     assert delta == 0.0
 
-    K_eff = entrainment.effective_coupling(K0=0.5, coherence=0.5, distance=2.0)
-    assert K_eff > 0
+    k_eff = entrainment.effective_coupling(k0=0.5, coherence=0.5, distance=2.0)
+    assert k_eff > 0
 
-    consent, lock_strength = entrainment.consent_gate(K_eff=1.0, delta_omega=0.2)
+    consent, lock_strength = entrainment.consent_gate(k_eff=1.0, delta_omega=0.2)
     assert consent is True
     assert lock_strength > 0
 

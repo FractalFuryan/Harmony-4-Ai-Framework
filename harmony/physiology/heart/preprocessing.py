@@ -17,8 +17,8 @@ class SignalPreprocessor:
         self.heart_band = heart_band
         self.resp_band = resp_band
 
-    def apply_notch_filter(self, x: np.ndarray, Q: float = 30.0) -> np.ndarray:
-        b, a = signal.iirnotch(self.notch_freq, Q, self.fs)
+    def apply_notch_filter(self, x: np.ndarray, q: float = 30.0) -> np.ndarray:
+        b, a = signal.iirnotch(self.notch_freq, q, self.fs)
         return signal.filtfilt(b, a, x)
 
     def apply_bandpass(

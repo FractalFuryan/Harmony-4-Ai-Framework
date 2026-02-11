@@ -1,7 +1,5 @@
 import unittest
 
-import numpy as np
-
 from heart_field.core.field_score import HeartFieldScorer
 
 
@@ -17,7 +15,7 @@ class TestHeartFieldScorer(unittest.TestCase):
         )
 
         expected_eff = 1.6
-        expected_plv = (0.7 ** 0.4) * (0.6 ** 0.3)
+        expected_plv = (0.7**0.4) * (0.6**0.3)
         self.assertAlmostEqual(results["effective_field"], expected_eff)
         self.assertAlmostEqual(results["net_field"], expected_eff * expected_plv, places=6)
 

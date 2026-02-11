@@ -2,7 +2,6 @@ import numpy as np
 
 from harmony import HeartFieldScorer, NonCoercionInvariant, phase_tools
 
-
 print("=== Final Integration Smoke Test ===\n")
 
 fs = 250.0

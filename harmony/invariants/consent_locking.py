@@ -4,8 +4,6 @@ Consent-as-locking invariant: influence requires mutual resonance.
 
 from __future__ import annotations
 
-from typing import Optional
-
 
 class ConsentLockingInvariant:
     """Enforce that influence requires mutual resonance conditions."""
@@ -17,7 +15,7 @@ class ConsentLockingInvariant:
         self,
         coupling_strength: float,
         frequency_difference: float,
-        receiver_threshold: Optional[float] = None,
+        receiver_threshold: float | None = None,
     ) -> dict[str, object]:
         if receiver_threshold is None:
             receiver_threshold = self.default_threshold
@@ -49,7 +47,7 @@ class ConsentLockingInvariant:
     def dynamic_threshold(
         self,
         stress_level: float,
-        baseline_threshold: Optional[float] = None,
+        baseline_threshold: float | None = None,
         sensitivity: float = 0.5,
     ) -> float:
         if baseline_threshold is None:
@@ -59,7 +57,7 @@ class ConsentLockingInvariant:
 
     def _get_violation_reason(
         self, consent_granted: bool, can_lock: bool, meaningful_coupling: bool
-    ) -> Optional[str]:
+    ) -> str | None:
         if consent_granted:
             return None
 

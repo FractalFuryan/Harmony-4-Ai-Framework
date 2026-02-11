@@ -37,9 +37,7 @@ class HeartFieldScorer:
         if enable_loves_proof:
             from .loves_proof import PhysiologyLovesProof
 
-            self.loves_proof_checker = PhysiologyLovesProof(
-                fs=fs, **(loves_proof_kwargs or {})
-            )
+            self.loves_proof_checker = PhysiologyLovesProof(fs=fs, **(loves_proof_kwargs or {}))
 
     def compute_net_field(
         self,
@@ -52,7 +50,7 @@ class HeartFieldScorer:
         if weights is None:
             weights = self.default_weights
 
-        A_eff = heart_amplitude * heart_coherence
+        a_eff = heart_amplitude * heart_coherence
         plv_product = 1.0
         plv_contributions: dict[str, dict[str, float]] = {}
 
@@ -67,22 +65,22 @@ class HeartFieldScorer:
                 "contribution": float(channel_contribution),
             }
 
-        A_net = A_eff * plv_product
+        a_net = a_eff * plv_product
 
         distance_scaling = 1.0
         if distance is not None and distance > 0:
             distance_scaling = (self.r0 / distance) ** self.falloff_exp
-        A_net_scaled = A_net * distance_scaling
+        a_net_scaled = a_net * distance_scaling
 
         return {
             "heart_amplitude": float(heart_amplitude),
             "heart_coherence": float(heart_coherence),
-            "effective_field": float(A_eff),
+            "effective_field": float(a_eff),
             "plv_contributions": plv_contributions,
             "plv_product": float(plv_product),
-            "net_field": float(A_net),
+            "net_field": float(a_net),
             "distance_scaling": float(distance_scaling),
-            "net_field_scaled": float(A_net_scaled),
+            "net_field_scaled": float(a_net_scaled),
             "weights_used": weights,
         }
 
@@ -136,25 +134,25 @@ class HeartFieldScorer:
                 gain_aligned = gain_rate[:min_len]
                 stress_slope, _, _, _, _ = stats.linregress(time_aligned, stress_aligned)
                 stress_decreasing = stress_slope < 0
-                recent_G = float(np.mean(gain_aligned[-min(10, len(gain_aligned)):]))
+                recent_g = float(np.mean(gain_aligned[-min(10, len(gain_aligned)) :]))
             else:
-                recent_G = float(np.mean(gain_rate[-min(10, len(gain_rate)):]))
+                recent_g = float(np.mean(gain_rate[-min(10, len(gain_rate)) :]))
         else:
-            recent_G = float(np.mean(gain_rate[-min(10, len(gain_rate)):]))
+            recent_g = float(np.mean(gain_rate[-min(10, len(gain_rate)) :]))
 
         if stress_decreasing is not None:
-            constraint_satisfied = (recent_G > 0) and bool(stress_decreasing)
+            constraint_satisfied = (recent_g > 0) and bool(stress_decreasing)
         else:
             constraint_satisfied = None
 
         return {
-            "coherence_gain_rate": recent_G,
+            "coherence_gain_rate": recent_g,
             "stress_slope": None if stress_slope is None else float(stress_slope),
             "stress_decreasing": stress_decreasing,
             "constraint_satisfied": constraint_satisfied,
             "gain_rate_timeseries": gain_rate,
             "stress_values": stress_proxy,
-            "message": self._get_constraint_message(constraint_satisfied, recent_G, stress_slope),
+            "message": self._get_constraint_message(constraint_satisfied, recent_g, stress_slope),
         }
 
     def compute_with_loves_proof(

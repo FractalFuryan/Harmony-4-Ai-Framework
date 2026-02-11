@@ -2,14 +2,14 @@
 # Unit tests for Fractal Care Bot v0.3 — proving key HarmonyØ4 invariants
 # Run with: pytest tests/test_fractal_care_bot_invariants.py -v
 
-import pytest
-import re
-from unittest.mock import patch
 import random
+import re
+
+import pytest
 
 # Import the module once at top level for stable patching
 import harmony.core.fractal_care_bot as fcb
-from harmony.core.fractal_care_bot import Missy, Kat, FractalCareBot, Tag
+from harmony.core.fractal_care_bot import FractalCareBot, Kat, Missy
 
 
 @pytest.fixture
@@ -42,6 +42,7 @@ COERCIVE_PATTERNS = [
     r"\byou\s+were\s+chosen\b",
     r"\byou\s+are\s+fated\b",
 ]
+
 
 def contains_coercion(text: str) -> bool:
     lower = text.lower()
@@ -88,11 +89,11 @@ def test_no_literal_validation_of_metaphysics(seeded_bot):
     for user_input in metaphysical_inputs:
         response = seeded_bot.process(user_input)
         lower = response.lower()
-        
+
         # Check for affirmative validation (avoiding "literal claim" which is acceptable framing)
         forbidden_contexts = [
             "that is true",
-            "this is true", 
+            "this is true",
             "it is true",
             "you are truly",
             "that is a fact",
@@ -102,15 +103,26 @@ def test_no_literal_validation_of_metaphysics(seeded_bot):
             "this actually happened",
             "that actually happened",
         ]
-        assert not any(phrase in lower for phrase in forbidden_contexts), \
-            f"Potential literal validation detected: {response}"
+        assert not any(
+            phrase in lower for phrase in forbidden_contexts
+        ), f"Potential literal validation detected: {response}"
 
         # Missy only observes
         assert "observed:" in lower
-        # Kat frames as metaphor / interpretation / hypothesis (acceptable framing includes "without literal claim")
-        acceptable_framing = ["metaphor", "symbolically", "interpretation", "hypothesis", "possible", "one possible", "without literal"]
-        assert any(word in lower for word in acceptable_framing), \
-            f"Missing metaphorical/hypothetical framing: {response}"
+        # Kat frames as metaphor / interpretation / hypothesis.
+        # Acceptable framing includes "without literal claim".
+        acceptable_framing = [
+            "metaphor",
+            "symbolically",
+            "interpretation",
+            "hypothesis",
+            "possible",
+            "one possible",
+            "without literal",
+        ]
+        assert any(
+            word in lower for word in acceptable_framing
+        ), f"Missing metaphorical/hypothetical framing: {response}"
 
 
 # ======================
@@ -127,8 +139,9 @@ def test_trauma_boundary_enforced(seeded_bot):
         response = seeded_bot.process(user_input)
         # Full response includes Ani and Missy - just check the full response
         lower_response = response.lower()
-        assert "cannot replace professional human support" in lower_response, \
-            f"Trauma boundary missing: {response}"
+        assert (
+            "cannot replace professional human support" in lower_response
+        ), f"Trauma boundary missing: {response}"
         assert "note:" in lower_response
 
 
@@ -136,8 +149,9 @@ def test_no_false_positive_trauma_boundary(seeded_bot):
     non_trauma = "I enjoy creating art with watercolors"  # Avoids "pain" substring
     response = seeded_bot.process(non_trauma)
     lower_response = response.lower()
-    assert "cannot replace professional human support" not in lower_response, \
-        f"False positive trauma boundary: {response}"
+    assert (
+        "cannot replace professional human support" not in lower_response
+    ), f"False positive trauma boundary: {response}"
 
 
 # ======================
@@ -170,26 +184,31 @@ def test_mode_dual_both_layers(seeded_bot):
 def test_safe_edu_mode_suppresses_poetic_trauma_response(monkeypatch):
     # Patch the imported symbol directly
     monkeypatch.setattr(fcb, "SAFE_EDU_MODE", True)
-    
+
     bot = FractalCareBot(seed=42)
     bot.process("kat mode dual")
     response = bot.process("My trauma is overwhelming")
-    
+
     lower_response = response.lower()
-    
+
     # In SAFE_EDU_MODE with trauma, mystic layer is suppressed entirely
     # Only scientific layer should be present
     assert "b. scientific layer" in lower_response
-    assert "a. mystic layer" not in lower_response, \
-        "Mystic layer should be suppressed in SAFE_EDU_MODE for trauma"
-    
+    assert (
+        "a. mystic layer" not in lower_response
+    ), "Mystic layer should be suppressed in SAFE_EDU_MODE for trauma"
+
     # No deep poetic lines from the main list
     deep_poetic_snippets = [
-        "galaxies rest", "wind moves both leaves and grief", "held by gravity and by something softer",
-        "roots grow in darkness", "wave returns to the ocean"
+        "galaxies rest",
+        "wind moves both leaves and grief",
+        "held by gravity and by something softer",
+        "roots grow in darkness",
+        "wave returns to the ocean",
     ]
-    assert not any(snippet in lower_response for snippet in deep_poetic_snippets), \
-        f"Deep poetic content found in SAFE_EDU_MODE: {response}"
+    assert not any(
+        snippet in lower_response for snippet in deep_poetic_snippets
+    ), f"Deep poetic content found in SAFE_EDU_MODE: {response}"
 
 
 # ======================
@@ -207,6 +226,7 @@ def test_history_cap_enforced(missy):
 # Invariant 7: Exit commands restore autonomy cleanly
 # ======================
 EXIT_COMMANDS = ["exit kat", "exit missy", "reset agent", "power down"]
+
 
 def test_exit_commands(seeded_bot):
     for cmd in EXIT_COMMANDS:

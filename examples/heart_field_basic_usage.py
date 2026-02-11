@@ -83,8 +83,8 @@ def main() -> dict[str, object]:
 
     print("\n=== Non-Coercion Constraint Check ===")
     time_points, coherence_series = coherence.sliding_coherence(ecg_phase_detrended)
-    stress_proxy = 1.0 - 0.5 * time_points / time_points[-1] + 0.1 * np.random.randn(
-        len(time_points)
+    stress_proxy = (
+        1.0 - 0.5 * time_points / time_points[-1] + 0.1 * np.random.randn(len(time_points))
     )
 
     constraint_check = scorer.compute_non_coercion_check(

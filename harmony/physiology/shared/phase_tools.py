@@ -5,13 +5,11 @@ These are mathematical primitives, not physiological models.
 
 from __future__ import annotations
 
-from typing import Optional, Tuple
-
 import numpy as np
 from scipy import signal, stats
 
 
-def compute_analytic_signal(x: np.ndarray, fs: float) -> Tuple[np.ndarray, np.ndarray]:
+def compute_analytic_signal(x: np.ndarray, fs: float) -> tuple[np.ndarray, np.ndarray]:
     """Compute analytic signal z(t) = x(t) + i*H[x(t)]."""
     analytic = signal.hilbert(x)
     amplitude = np.abs(analytic)
@@ -19,9 +17,7 @@ def compute_analytic_signal(x: np.ndarray, fs: float) -> Tuple[np.ndarray, np.nd
     return amplitude, phase
 
 
-def remove_linear_phase_trend(
-    phase: np.ndarray, t: Optional[np.ndarray] = None
-) -> np.ndarray:
+def remove_linear_phase_trend(phase: np.ndarray, t: np.ndarray | None = None) -> np.ndarray:
     """Remove linear trend from phase using regression."""
     if len(phase) == 0:
         return phase.copy()
@@ -53,9 +49,7 @@ def compute_phase_lock_value(phase1: np.ndarray, phase2: np.ndarray) -> float:
     return float(np.abs(complex_avg))
 
 
-def bias_corrected_plv(
-    phase1: np.ndarray, phase2: np.ndarray, n_shuffles: int = 100
-) -> float:
+def bias_corrected_plv(phase1: np.ndarray, phase2: np.ndarray, n_shuffles: int = 100) -> float:
     """Bias-correct PLV using circular shuffling."""
     raw_plv = compute_phase_lock_value(phase1, phase2)
 
@@ -74,9 +68,7 @@ def bias_corrected_plv(
     return max(raw_plv - bias_estimate, 0.0)
 
 
-def compute_coherence_gain_rate(
-    coherence: np.ndarray, time_points: np.ndarray
-) -> np.ndarray:
+def compute_coherence_gain_rate(coherence: np.ndarray, time_points: np.ndarray) -> np.ndarray:
     """Compute coherence gain rate G = d/dt log(C + eps)."""
     epsilon = 1e-6
     log_coherence = np.log(coherence + epsilon)

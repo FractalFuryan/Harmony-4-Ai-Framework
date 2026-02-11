@@ -4,11 +4,10 @@
 # Public-safe, tutor-ready, HarmonyØ4-aligned prototype
 # Educational / reflective use only. Not a therapeutic, diagnostic, or crisis support system.
 
+import os
 import random
 import time
-import os
 from enum import Enum
-from typing import List, Dict, Optional
 
 # Optional education-safe mode (dormant by default, toggle for school deployments)
 SAFE_EDU_MODE = os.getenv("HARMONY_SAFE_EDU", "false").lower() == "true"
@@ -16,6 +15,7 @@ SAFE_EDU_MODE = os.getenv("HARMONY_SAFE_EDU", "false").lower() == "true"
 
 class Tag(Enum):
     """Classification tags for input signals."""
+
     FACTUAL = "FACTUAL"
     EMOTIONAL = "EMOTIONAL"
     SYMBOLIC = "SYMBOLIC"
@@ -33,18 +33,22 @@ class Tag(Enum):
 # ======================
 class Missy:
     """Observer-primary coherence engine. Classifies and reflects without steering."""
-    
-    def __init__(self):
-        self.history: List[Dict] = []
 
-    def classify(self, text: str) -> List[Tag]:
+    def __init__(self):
+        self.history: list[dict] = []
+
+    def classify(self, text: str) -> list[Tag]:
         """Classify input text into semantic tags. Returns FACTUAL if no tags match."""
         tags = []
         lower = text.lower()
-        
-        if any(phrase in lower for phrase in ["i feel", "sad", "anxious", "lonely", "scared", "hurt"]):
+
+        if any(
+            phrase in lower for phrase in ["i feel", "sad", "anxious", "lonely", "scared", "hurt"]
+        ):
             tags.append(Tag.EMOTIONAL)
-        if "?" in text or any(phrase in lower for phrase in ["why", "how", "what is", "can you explain"]):
+        if "?" in text or any(
+            phrase in lower for phrase in ["why", "how", "what is", "can you explain"]
+        ):
             tags.append(Tag.QUESTION)
         if any(word in lower for word in ["mandate", "chosen", "destiny", "must", "fated"]):
             tags.append(Tag.SYMBOLIC)
@@ -60,7 +64,7 @@ class Missy:
             tags.append(Tag.TRAUMA)
         if any(word in lower for word in ["poem", "metaphor", "as if", "like a"]):
             tags.append(Tag.POETIC)
-        
+
         return tags or [Tag.FACTUAL]
 
     def restate_signal(self, text: str) -> str:
@@ -71,9 +75,11 @@ class Missy:
         """Process input and return observation report. This is descriptive, not prescriptive."""
         tags = self.classify(user_input)
         signal = self.restate_signal(user_input)
-        
+
         # Ephemeral history — session-local only, capped for privacy
-        self.history.append({"input": user_input, "tags": [t.value for t in tags], "signal": signal})
+        self.history.append(
+            {"input": user_input, "tags": [t.value for t in tags], "signal": signal}
+        )
         if len(self.history) > 50:
             self.history.pop(0)
 
@@ -90,7 +96,7 @@ class Missy:
 # ======================
 class Kat:
     """Dual-layer interpreter: mystic (poetic) and scientific. No ontological claims."""
-    
+
     def __init__(self, rng: random.Random):
         self.rng = rng
         self.mode = "MODE_DUAL"
@@ -123,11 +129,27 @@ class Kat:
     ]
 
     scientific_restatements = [
-        "Observation: Emotional arousal present. Interpretation: Need for regulation. Hypothesis: Slow breathing may reduce sympathetic activation.",
-        "Observation: Symbolic language used. Interpretation: Attempt to integrate experience. Hypothesis: Metaphor aids meaning-making without literal claim.",
-        "Observation: Distress signal detected. Interpretation: Possible activation of threat response. Hypothesis: Grounding techniques can restore prefrontal engagement.",
-        "Observation: Relational theme. Interpretation: Seeking connection. Hypothesis: Secure attachment patterns correlate with resilience.",
-        "Observation: Question posed. Interpretation: Information-seeking or exploratory mode active.",
+        (
+            "Observation: Emotional arousal present. Interpretation: Need for regulation. "
+            "Hypothesis: Slow breathing may reduce sympathetic activation."
+        ),
+        (
+            "Observation: Symbolic language used. Interpretation: Attempt to integrate experience. "
+            "Hypothesis: Metaphor aids meaning-making without literal claim."
+        ),
+        (
+            "Observation: Distress signal detected. "
+            "Interpretation: Possible activation of threat response. "
+            "Hypothesis: Grounding techniques can restore prefrontal engagement."
+        ),
+        (
+            "Observation: Relational theme. Interpretation: Seeking connection. "
+            "Hypothesis: Secure attachment patterns correlate with resilience."
+        ),
+        (
+            "Observation: Question posed. Interpretation: Information-seeking "
+            "or exploratory mode active."
+        ),
     ]
 
     trauma_boundary = (
@@ -135,7 +157,7 @@ class Kat:
         "but I cannot replace professional human support or therapy."
     )
 
-    def classify_for_reflection(self, tags: List[Tag]) -> str:
+    def classify_for_reflection(self, tags: list[Tag]) -> str:
         """Classify tags into reflection categories."""
         if Tag.EMOTIONAL in tags or Tag.TRAUMA in tags:
             return "emotional_trauma"
@@ -145,7 +167,7 @@ class Kat:
             return "question"
         return "neutral"
 
-    def reflect_mystic(self, tags: List[Tag]) -> str:
+    def reflect_mystic(self, tags: list[Tag]) -> str:
         """Generate poetic/symbolic reflection. Suppressed in SAFE_EDU_MODE for trauma."""
         if SAFE_EDU_MODE and (Tag.EMOTIONAL in tags or Tag.TRAUMA in tags):
             return "A quiet presence walks beside you."
@@ -154,13 +176,15 @@ class Kat:
         if category == "emotional_trauma":
             return self.rng.choice(self.poetic_reflections)
         elif category == "visionary":
-            return self.rng.choice([
-                "All form is a temporary dance of energy in spirals and waves.",
-                "The torus breathes — expansion, contraction, return.",
-            ])
+            return self.rng.choice(
+                [
+                    "All form is a temporary dance of energy in spirals and waves.",
+                    "The torus breathes — expansion, contraction, return.",
+                ]
+            )
         return "A quiet presence walks beside you."
 
-    def reflect_scientific(self, tags: List[Tag]) -> str:
+    def reflect_scientific(self, tags: list[Tag]) -> str:
         """Generate scientific/observational reflection. This is descriptive, not prescriptive."""
         return self.rng.choice(self.scientific_restatements)
 
@@ -169,14 +193,14 @@ class Kat:
         gestures = self.neutral_gestures if SAFE_EDU_MODE else self.micro_gestures
         return self.rng.choice(gestures)
 
-    def respond(self, user_input: str, tags: List[Tag]) -> str:
+    def respond(self, user_input: str, tags: list[Tag]) -> str:
         """Generate dual-layer response based on mode and tags."""
         reflection_mystic = self.reflect_mystic(tags)
         reflection_scientific = self.reflect_scientific(tags)
         gesture = self.act()
 
         lines = ["Kat online ⚓️💛\n"]
-        
+
         if self.mode in ["MODE_DUAL", "MODE_POETIC"] and not (SAFE_EDU_MODE and Tag.TRAUMA in tags):
             lines.append("A. Mystic layer")
             lines.append(reflection_mystic)
@@ -198,7 +222,7 @@ class Kat:
 class FractalCareBot:
     """
     Dual-agent reflective system combining Missy (observer) and Kat (dual interpreter).
-    
+
     HarmonyØ4 Alignment:
     - Observer primacy (Missy classifies without steering)
     - Dual interpretation without ontological collapse (Kat)
@@ -206,11 +230,11 @@ class FractalCareBot:
     - Stability without optimization (reflection, not direction)
     - Care without authority (presence, not prescription)
     """
-    
-    def __init__(self, seed: Optional[int] = None):
+
+    def __init__(self, seed: int | None = None):
         """
         Initialize bot with session-seeded randomness for reproducibility.
-        
+
         Args:
             seed: Optional random seed. If None, uses current time.
         """
@@ -221,7 +245,7 @@ class FractalCareBot:
     def process(self, user_input: str) -> str:
         """Process user input through Missy observation and Kat reflection."""
         lower_input = user_input.strip().lower()
-        
+
         # Autonomy restoration commands
         if lower_input in ["exit kat", "exit missy", "reset agent", "power down"]:
             return "Both agents powering down gently. Autonomy restored. Take care. ⚓️💛"
@@ -258,7 +282,7 @@ if __name__ == "__main__":
     print("Session-local memory only. No persistence beyond this run.")
     print("Type 'kat mode poetic', 'kat mode scientific', or 'kat mode dual' to switch Kat layers.")
     print("Say anything, or just breathe with us.\n")
-    
+
     while True:
         try:
             user = input("You: ")

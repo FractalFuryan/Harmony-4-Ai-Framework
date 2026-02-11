@@ -93,21 +93,21 @@ class TestACDCDecomposition:
             x = np.random.randn(1000)
             x_dc, x_ac = acdc_split(x, alpha=0.03)
 
-            E_total = np.sum(x**2)
-            E_dc = np.sum(x_dc**2)
-            E_ac = np.sum(x_ac**2)
-            E_cross = 2 * np.sum(x_dc * x_ac)
+            e_total = np.sum(x**2)
+            e_dc = np.sum(x_dc**2)
+            e_ac = np.sum(x_ac**2)
+            e_cross = 2 * np.sum(x_dc * x_ac)
 
-            energy_error = abs(E_total - (E_dc + E_ac + E_cross))
+            energy_error = abs(e_total - (e_dc + e_ac + e_cross))
 
-            assert energy_error < 1e-8 * E_total, (
-                f"Energy not conserved: error={energy_error}, E_total={E_total}"
-            )
+            assert (
+                energy_error < 1e-8 * e_total
+            ), f"Energy not conserved: error={energy_error}, E_total={e_total}"
 
             dot_product = np.abs(np.sum(x_dc * x_ac))
-            assert dot_product < 0.6 * np.sqrt(E_dc * E_ac), (
-                f"DC and AC not sufficiently orthogonal: dot={dot_product}"
-            )
+            assert dot_product < 0.6 * np.sqrt(
+                e_dc * e_ac
+            ), f"DC and AC not sufficiently orthogonal: dot={dot_product}"
 
     def test_ema_impulse_response(self) -> None:
         x = np.zeros(100)
@@ -120,17 +120,13 @@ class TestACDCDecomposition:
                 expected = (1 - alpha) * y[i - 1] if i > 0 else alpha
                 actual = y[i]
                 error = abs(actual - expected)
-                assert error < 1e-10, (
-                    f"EMA recurrence violated at i={i}, alpha={alpha}"
-                )
+                assert error < 1e-10, f"EMA recurrence violated at i={i}, alpha={alpha}"
 
             final_value = y[-1]
             theoretical_final = (1 - alpha) ** (len(x) - 1)
             error = abs(final_value - theoretical_final)
 
-            assert error < 1e-8, (
-                f"EMA final value incorrect: {final_value} vs {theoretical_final}"
-            )
+            assert error < 1e-8, f"EMA final value incorrect: {final_value} vs {theoretical_final}"
 
     def test_ac_power_invariance(self) -> None:
         np.random.seed(42)
@@ -146,8 +142,7 @@ class TestACDCDecomposition:
 
             power_error = abs(shifted_power - base_power)
             assert power_error < 1e-10, (
-                f"AC power not invariant to DC shift {offset}: "
-                f"{shifted_power} vs {base_power}"
+                f"AC power not invariant to DC shift {offset}: " f"{shifted_power} vs {base_power}"
             )
 
     def test_dc_slope_mathematical(self) -> None:
@@ -165,13 +160,9 @@ class TestACDCDecomposition:
             error = abs(computed_slope - expected_slope)
 
             if exact:
-                assert error < 1e-10, (
-                    f"DC slope incorrect: {computed_slope} vs {expected_slope}"
-                )
+                assert error < 1e-10, f"DC slope incorrect: {computed_slope} vs {expected_slope}"
             else:
-                assert error < 0.1, (
-                    f"DC slope too inaccurate: {computed_slope} vs {expected_slope}"
-                )
+                assert error < 0.1, f"DC slope too inaccurate: {computed_slope} vs {expected_slope}"
 
         np.random.seed(42)
         noise = np.random.randn(1000)

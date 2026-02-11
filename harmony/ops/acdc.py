@@ -4,8 +4,6 @@ AC/DC signal decomposition operator.
 
 from __future__ import annotations
 
-from typing import Tuple
-
 import numpy as np
 
 
@@ -23,7 +21,7 @@ def ema_lpf(x: np.ndarray, alpha: float = 0.02) -> np.ndarray:
     return y
 
 
-def acdc_split(x: np.ndarray, alpha: float = 0.02) -> Tuple[np.ndarray, np.ndarray]:
+def acdc_split(x: np.ndarray, alpha: float = 0.02) -> tuple[np.ndarray, np.ndarray]:
     x = np.asarray(x, dtype=float)
     x_dc = ema_lpf(x, alpha=alpha)
     x_ac = x - x_dc

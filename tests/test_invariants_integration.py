@@ -4,9 +4,9 @@ import unittest
 
 import numpy as np
 
-from harmony.invariants.non_coercion import NonCoercionInvariant
 from harmony.invariants.consent_locking import ConsentLockingInvariant
 from harmony.invariants.growth_bounds import GrowthBoundsInvariant
+from harmony.invariants.non_coercion import NonCoercionInvariant
 
 
 class TestInvariantsIntegration(unittest.TestCase):

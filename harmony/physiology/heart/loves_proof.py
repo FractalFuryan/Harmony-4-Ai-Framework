@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 
@@ -21,8 +21,8 @@ class PhysiologyLovesProof:
         t: np.ndarray,
         heart_coherence: np.ndarray,
         stress_proxy: np.ndarray,
-        influence_carrier: Optional[np.ndarray] = None,
-        heart_amplitude: Optional[np.ndarray] = None,
+        influence_carrier: np.ndarray | None = None,
+        heart_amplitude: np.ndarray | None = None,
     ) -> dict[str, Any]:
         if influence_carrier is None:
             if heart_amplitude is not None:
@@ -46,8 +46,8 @@ class PhysiologyLovesProof:
     ) -> dict[str, Any]:
         return self.invariant.check_continuous(
             t=t,
-            C=heart_coherence,
-            S=stress_proxy,
+            c=heart_coherence,
+            s=stress_proxy,
             x=stress_proxy,
             window_sec=window_sec,
             step_sec=step_sec,

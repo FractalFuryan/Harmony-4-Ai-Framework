@@ -40,9 +40,7 @@ def test_non_coercion_continuous() -> None:
     stress = 1.0 - 0.4 * (t / t[-1])
 
     invariant = NonCoercionInvariant(window_size=20)
-    results = invariant.check_continuous(
-        coherence, stress, window_sec=10.0, step_sec=5.0, fs=10.0
-    )
+    results = invariant.check_continuous(coherence, stress, window_sec=10.0, step_sec=5.0, fs=10.0)
 
     assert len(results["timestamps"]) == len(results["invariant_holds"])
     assert len(results["timestamps"]) > 0

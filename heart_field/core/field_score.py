@@ -125,11 +125,11 @@ class HeartFieldScorer:
                 gain_aligned = gain_rate[:min_len]
                 stress_slope, _, _, _, _ = stats.linregress(time_aligned, stress_aligned)
                 stress_decreasing = stress_slope < 0
-                recent_G = float(np.mean(gain_aligned[-min(10, len(gain_aligned)):]))
+                recent_G = float(np.mean(gain_aligned[-min(10, len(gain_aligned)) :]))
             else:
-                recent_G = float(np.mean(gain_rate[-min(10, len(gain_rate)):]))
+                recent_G = float(np.mean(gain_rate[-min(10, len(gain_rate)) :]))
         else:
-            recent_G = float(np.mean(gain_rate[-min(10, len(gain_rate)):]))
+            recent_G = float(np.mean(gain_rate[-min(10, len(gain_rate)) :]))
 
         if stress_decreasing is not None:
             constraint_satisfied = (recent_G > 0) and bool(stress_decreasing)

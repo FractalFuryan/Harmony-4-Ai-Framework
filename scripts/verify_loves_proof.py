@@ -49,9 +49,7 @@ def test_loves_proof_kernel() -> bool:
 
     result1 = invariant.check(t, C, S, x)
     assert result1["invariant_holds"] is True
-    print(
-        f"  OK: healthy growth passes (G={result1['G_mean']:.4f}, S={result1['S_slope']:.4f})"
-    )
+    print(f"  OK: healthy growth passes (G={result1['G_mean']:.4f}, S={result1['S_slope']:.4f})")
 
     S_coercive = 0.2 + 0.8 * (t / t[-1])
     result2 = invariant.check(t, C, S_coercive, x)

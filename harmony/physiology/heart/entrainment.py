@@ -36,9 +36,7 @@ class EntrainmentMetrics:
         corrected_plv = self._bias_correct_plv(phase1, phase2, raw_plv)
         return max(corrected_plv, 0.0)
 
-    def _bias_correct_plv(
-        self, phase1: np.ndarray, phase2: np.ndarray, raw_plv: float
-    ) -> float:
+    def _bias_correct_plv(self, phase1: np.ndarray, phase2: np.ndarray, raw_plv: float) -> float:
         if self.n_shuffles <= 0:
             return raw_plv
 
@@ -80,24 +78,26 @@ class EntrainmentMetrics:
 
         return time_points, plv_values
 
-    def arnold_tongue_boundary(self, freq1: float, freq2: float, K_eff: float) -> tuple[bool, float]:
+    def arnold_tongue_boundary(
+        self, freq1: float, freq2: float, k_eff: float
+    ) -> tuple[bool, float]:
         omega1 = 2.0 * np.pi * freq1
         omega2 = 2.0 * np.pi * freq2
         delta_omega = abs(omega1 - omega2)
-        return delta_omega < K_eff, delta_omega
+        return delta_omega < k_eff, delta_omega
 
     def effective_coupling(
         self,
-        K0: float,
+        k0: float,
         coherence: float,
         distance: float | None = None,
         r0: float = 1.0,
         falloff_exp: float = 3.0,
     ) -> float:
-        K_eff = K0 * coherence
+        k_eff = k0 * coherence
         if distance is not None and distance > 0:
-            K_eff *= (r0 / distance) ** falloff_exp
-        return K_eff
+            k_eff *= (r0 / distance) ** falloff_exp
+        return k_eff
 
     def kuramoto_order_parameter(self, phases: np.ndarray) -> np.ndarray:
         complex_phasors = np.exp(1j * phases)
@@ -106,16 +106,16 @@ class EntrainmentMetrics:
 
     def consent_gate(
         self,
-        K_eff: float,
+        k_eff: float,
         delta_omega: float,
         consent_threshold: float = 0.1,
         max_permissible_lock: float = 0.95,
     ) -> tuple[bool, float]:
-        can_lock = delta_omega < K_eff
-        if not can_lock or K_eff < consent_threshold:
+        can_lock = delta_omega < k_eff
+        if not can_lock or k_eff < consent_threshold:
             return False, 0.0
 
-        lock_strength = 1.0 - (delta_omega / K_eff)
+        lock_strength = 1.0 - (delta_omega / k_eff)
         lock_strength = min(lock_strength, max_permissible_lock)
         return lock_strength > 0, lock_strength
 
@@ -152,11 +152,11 @@ class EntrainmentMetrics:
         delta_omega = abs(omega_source - omega_receiver)
 
         plv = self.phase_lock_value(phase_source, phase_receiver)
-        K_eff = plv
+        k_eff = plv
 
         consent_threshold = self.dynamic_consent_threshold(stress_receiver)
         consent_granted, lock_strength = self.consent_gate(
-            K_eff, delta_omega, consent_threshold=consent_threshold
+            k_eff, delta_omega, consent_threshold=consent_threshold
         )
 
         respectful_influence = lock_strength * plv if consent_granted else 0.0
@@ -166,7 +166,7 @@ class EntrainmentMetrics:
             "lock_strength": float(lock_strength),
             "plv": float(plv),
             "delta_omega": float(delta_omega),
-            "K_eff": float(K_eff),
+            "K_eff": float(k_eff),
             "consent_threshold": float(consent_threshold),
             "respectful_influence": float(respectful_influence),
             "omega_source": float(omega_source),

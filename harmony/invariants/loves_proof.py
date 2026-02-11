@@ -8,7 +8,7 @@ from typing import Any
 
 import numpy as np
 
-from harmony.ops.acdc import ac_power, acdc_split, dc_slope
+from harmony.ops.acdc import ac_power, acdc_split
 
 
 class LovesProofInvariant:
@@ -29,74 +29,72 @@ class LovesProofInvariant:
     def check(
         self,
         t: np.ndarray,
-        C: np.ndarray,
-        S: np.ndarray,
+        c: np.ndarray,
+        s: np.ndarray,
         x: np.ndarray,
     ) -> dict[str, Any]:
         t = np.asarray(t, dtype=float)
-        C = np.asarray(C, dtype=float)
-        S = np.asarray(S, dtype=float)
+        c = np.asarray(c, dtype=float)
+        s = np.asarray(s, dtype=float)
         x = np.asarray(x, dtype=float)
 
-        n = min(len(t), len(C), len(S), len(x))
+        n = min(len(t), len(c), len(s), len(x))
         if n < self.min_window:
             return self._insufficient_data_result()
 
         t_win = t[-n:]
-        C_win = C[-n:]
-        S_win = S[-n:]
+        c_win = c[-n:]
+        s_win = s[-n:]
         x_win = x[-n:]
 
-        C_safe = np.maximum(C_win, self.eps)
-        clamped_C = bool(np.any(C_win <= 0))
-        logC = np.log(C_safe)
-        G = np.gradient(logC, t_win)
-        G_mean = float(np.mean(G))
+    c_safe = np.maximum(c_win, self.eps)
+    clamped_c = bool(np.any(c_win <= 0))
+    log_c = np.log(c_safe)
+    g = np.gradient(log_c, t_win)
+    g_mean = float(np.mean(g))
 
-        S_slope = self._linear_slope(t_win, S_win)
-        S_decreasing = S_slope < 0
+        s_slope = self._linear_slope(t_win, s_win)
+        s_decreasing = s_slope < 0
 
         x_dc, x_ac = acdc_split(x_win, alpha=self.alpha)
-        Pac_trend = self._ac_power_trend(x_ac, t_win)
-        Pac_not_increasing = Pac_trend <= 0
+        pac_trend = self._ac_power_trend(x_ac, t_win)
+        pac_not_increasing = pac_trend <= 0
 
         if self.require_dc_trend:
-            S_dc, _ = acdc_split(S_win, alpha=self.alpha)
-            S_dc_slope = self._linear_slope(t_win, S_dc)
-            S_dc_decreasing = S_dc_slope < 0
+            s_dc, _ = acdc_split(s_win, alpha=self.alpha)
+            s_dc_slope = self._linear_slope(t_win, s_dc)
+            s_dc_decreasing = s_dc_slope < 0
         else:
-            S_dc_slope = 0.0
-            S_dc_decreasing = True
+            s_dc_slope = 0.0
+            s_dc_decreasing = True
 
         invariant_holds = (
-            G_mean > 0
-            and S_decreasing
-            and Pac_not_increasing
-            and (not self.require_dc_trend or S_dc_decreasing)
+            g_mean > 0
+            and s_decreasing
+            and pac_not_increasing
+            and (not self.require_dc_trend or s_dc_decreasing)
         )
 
         return {
-            "G_mean": G_mean,
-            "S_slope": S_slope,
-            "Pac_trend": Pac_trend,
-            "S_dc_slope": S_dc_slope,
-            "clamped_C": clamped_C,
-            "coherence_growing": G_mean > 0,
-            "stress_decreasing": S_decreasing,
-            "pac_not_increasing": Pac_not_increasing,
-            "dc_stress_decreasing": S_dc_decreasing,
+            "G_mean": g_mean,
+            "S_slope": s_slope,
+            "Pac_trend": pac_trend,
+            "S_dc_slope": s_dc_slope,
+            "clamped_C": clamped_c,
+            "coherence_growing": g_mean > 0,
+            "stress_decreasing": s_decreasing,
+            "pac_not_increasing": pac_not_increasing,
+            "dc_stress_decreasing": s_dc_decreasing,
             "invariant_holds": invariant_holds,
             "window_samples": n,
-            "violation_reason": self._analyze_violation(
-                G_mean, S_slope, Pac_trend, S_dc_slope
-            ),
+            "violation_reason": self._analyze_violation(g_mean, s_slope, pac_trend, s_dc_slope),
         }
 
     def check_continuous(
         self,
         t: np.ndarray,
-        C: np.ndarray,
-        S: np.ndarray,
+        c: np.ndarray,
+        s: np.ndarray,
         x: np.ndarray,
         window_sec: float = 30.0,
         step_sec: float = 5.0,
@@ -123,10 +121,7 @@ class LovesProofInvariant:
             start = i * step_samples
             end = start + window_samples
             window_check = self.check(
-                t=t[start:end],
-                C=C[start:end],
-                S=S[start:end],
-                x=x[start:end],
+                t=t[start:end], c=c[start:end], s=s[start:end], x=x[start:end]
             )
             results["timestamps"].append(float(t[start]))
             results["invariant_holds"].append(window_check["invariant_holds"])
@@ -152,27 +147,27 @@ class LovesProofInvariant:
             return 0.0
 
         mid = len(x_ac) // 2
-        Pac1 = ac_power(x_ac[:mid]) if mid > 2 else ac_power(x_ac)
-        Pac2 = ac_power(x_ac[mid:]) if len(x_ac) - mid > 2 else Pac1
+        pac1 = ac_power(x_ac[:mid]) if mid > 2 else ac_power(x_ac)
+        pac2 = ac_power(x_ac[mid:]) if len(x_ac) - mid > 2 else pac1
 
         t_mid = t[mid] if mid < len(t) else t[-1]
         t_start = t[0]
-        return float((Pac2 - Pac1) / (t_mid - t_start)) if t_mid > t_start else float(Pac2 - Pac1)
+        return float((pac2 - pac1) / (t_mid - t_start)) if t_mid > t_start else float(pac2 - pac1)
 
     def _analyze_violation(
-        self, G_mean: float, S_slope: float, Pac_trend: float, S_dc_slope: float
+        self, g_mean: float, s_slope: float, pac_trend: float, s_dc_slope: float
     ) -> str:
-        if G_mean > 0 and S_slope < 0 and Pac_trend <= 0 and S_dc_slope < 0:
+        if g_mean > 0 and s_slope < 0 and pac_trend <= 0 and s_dc_slope < 0:
             return "All conditions satisfied"
 
         violations = []
-        if G_mean <= 0:
+        if g_mean <= 0:
             violations.append("coherence not growing")
-        if S_slope >= 0:
+        if s_slope >= 0:
             violations.append("stress not decreasing")
-        if Pac_trend > 0:
+        if pac_trend > 0:
             violations.append("AC power increasing")
-        if self.require_dc_trend and S_dc_slope >= 0:
+        if self.require_dc_trend and s_dc_slope >= 0:
             violations.append("DC stress not decreasing")
 
         return f"Violation: {'; '.join(violations)}" if violations else "No violations detected"
