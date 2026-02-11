@@ -2,7 +2,7 @@
 
 **An open, ethical framework for modeling coherence, consent, and observer-safe systems — now with biophysical extensions for non-coercive growth.**
 
-[![CI](https://github.com/harmony04/harmony04/actions/workflows/ci.yml/badge.svg)](https://github.com/harmony04/harmony04/actions)
+[![CI](https://github.com/FractalFuryan/Harmony-4-Ai-Framework/actions/workflows/ci.yml/badge.svg)](https://github.com/FractalFuryan/Harmony-4-Ai-Framework/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![Hash Anchor](https://img.shields.io/badge/Hash-HIST--3ce0df425861-green.svg)](#provenance--hash-anchor)
