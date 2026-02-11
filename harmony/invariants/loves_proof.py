@@ -14,8 +14,7 @@ from harmony.ops.acdc import ac_power, acdc_split
 class LovesProofInvariant:
     """Enforce non-coercive growth with coherence and stress dynamics."""
 
-    def __init__(
-        self,
+    def __init__(self,
         eps: float = 1e-6,
         alpha: float = 0.02,
         min_window: int = 30,
@@ -26,8 +25,7 @@ class LovesProofInvariant:
         self.min_window = min_window
         self.require_dc_trend = require_dc_trend
 
-    def check(
-        self,
+    def check(self,
         t: np.ndarray,
         c: np.ndarray,
         s: np.ndarray,
@@ -47,11 +45,11 @@ class LovesProofInvariant:
         s_win = s[-n:]
         x_win = x[-n:]
 
-    c_safe = np.maximum(c_win, self.eps)
-    clamped_c = bool(np.any(c_win <= 0))
-    log_c = np.log(c_safe)
-    g = np.gradient(log_c, t_win)
-    g_mean = float(np.mean(g))
+        c_safe = np.maximum(c_win, self.eps)
+        clamped_c = bool(np.any(c_win <= 0))
+        log_c = np.log(c_safe)
+        g = np.gradient(log_c, t_win)
+        g_mean = float(np.mean(g))
 
         s_slope = self._linear_slope(t_win, s_win)
         s_decreasing = s_slope < 0
@@ -90,8 +88,7 @@ class LovesProofInvariant:
             "violation_reason": self._analyze_violation(g_mean, s_slope, pac_trend, s_dc_slope),
         }
 
-    def check_continuous(
-        self,
+    def check_continuous(self,
         t: np.ndarray,
         c: np.ndarray,
         s: np.ndarray,
