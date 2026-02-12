@@ -49,13 +49,24 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -e ".[dev]"
 ```
 
-### 3. Run Tests
+### 3. Install Pre-commit Hooks (Recommended)
+
+Install pre-commit hooks to automatically format code before each commit:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+This will automatically run Black and Ruff before each commit, ensuring your code meets our formatting standards.
+
+### 4. Run Tests
 
 ```bash
 pytest
 ```
 
-### 4. Run Ethics Verification
+### 5. Run Ethics Verification
 
 ```bash
 python scripts/verify_ethics.py
