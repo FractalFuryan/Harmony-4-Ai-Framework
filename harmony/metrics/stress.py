@@ -4,7 +4,6 @@ import numpy as np
 
 EPS = 1e-12
 
-
 def stress_composite_physio(
     heart_rate: np.ndarray,
     eda: np.ndarray | None = None,
@@ -58,7 +57,6 @@ def stress_composite_physio(
     composite = np.mean(components, axis=0)
     return np.clip(composite, 0.0, 1.0)
 
-
 def stress_prediction_error(
     predictions: np.ndarray,
     targets: np.ndarray,
@@ -100,7 +98,6 @@ def stress_prediction_error(
         stress = np.zeros_like(error)
 
     return np.clip(stress, 0.0, 1.0)
-
 
 def stress_velocity_energy(
     signal: np.ndarray,
