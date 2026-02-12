@@ -204,8 +204,18 @@ python run_math_tests.py
 # Full test suite with coverage gate
 pytest --cov=harmony --cov-report=term-missing --cov-fail-under=85
 
+# Type checking (uses workspace venv when available)
+scripts/type_check.sh
+
 # Verify ethical constraints
 python scripts/verify_ethics.py
+```
+
+Tip: install pre-commit hooks to auto-run formatting and linting before each commit:
+
+```bash
+pip install pre-commit
+pre-commit install
 ```
 
 ---
@@ -392,11 +402,21 @@ pytest
 # Run with coverage
 pytest --cov=harmony --cov-report=term-missing
 
+# Type checking (uses workspace venv when available)
+scripts/type_check.sh
+
 # Run ethics verification
 python scripts/verify_ethics.py
 
 # Run Fractal Care Bot invariant tests
 pytest tests/test_fractal_care_bot_invariants.py -v
+```
+
+Tip: install pre-commit hooks to auto-run formatting and linting before each commit:
+
+```bash
+pip install pre-commit
+pre-commit install
 ```
 
 ---
